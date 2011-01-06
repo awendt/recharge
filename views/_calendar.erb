@@ -1,0 +1,7 @@
+<table>
+  <tbody>
+    <% (1..12).each do |month| %>
+      <%= erb :_month, :layout => false, :locals => {:year => year, :month => month} %>
+    <% end %>
+  </tbody>
+</table>

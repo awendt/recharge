@@ -18,14 +18,14 @@
         $("#count").text($(".vacation").not(".weekend").length);
       }
       var dragging;
-      $("li").draggable({
+      $("td").draggable({
         opacity: 0.7,
         helper: "clone",
         start: function(event, ui) {
           dragging = $(this);
         }
       });
-      $("li").droppable({
+      $("td").droppable({
           hoverClass: 'drophover',
           over: function(event, ui) {
             highlight_between_ids($(".drophover").attr("id"), $(dragging).attr("id"));
@@ -35,24 +35,16 @@
     });
   </script>
   <style type="text/css">
-    li { text-align:center; padding: 5px 8px; border-right: 1px solid #000; cursor: default; width:20px; float:left; }
+    td { text-align:center; padding: 5px 8px; margin:0; cursor: default; width:20px; float:left; }
     .weekend { background-color:#F8B85F; }
     .vacation { background-color:red; !important }
     #count { margin-top:50px; clear: left; font-size:6em; font-family: Helvetica, Arial, 'sans-serif'}
-    ul { list-style-type:none; clear: left; border-top: 1px solid #000; }
-    ul:last-child { border-bottom: 1px solid #000; }
+    tr { list-style-type:none; clear: left; border-top: 1px solid #000; padding:0; margin:0; }
+    table { margin: 0 auto; }
   </style>
 </head>
 <body>
-  <% (1..12).each do |month| %>
-    <ul id="<%= "#{Time.now.year}#{"%02d" % month}" %>">
-      <% (1..31).each do |day| %>
-        <% current_date = Time.mktime(Time.now.year, month, day) %>
-        <% break if current_date.day != day %>
-        <li id="<%= "#{Time.now.year}#{"%02d" % month}#{"%02d" % day}" %>" class="<%= "weekend" if [0,6].include?(current_date.wday) %>"><%= day %></li>
-      <% end %>
-    </ul>
-  <% end %>
+  <%= calendar_for(Time.now.year) %>
   <div id="count"></div>
 </body>
 </html>

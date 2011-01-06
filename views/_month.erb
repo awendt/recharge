@@ -1,0 +1,9 @@
+<tr id="<%= id_for(year, month) %>">
+  <% (1..31).each do |day| %>
+    <% current_date = Time.mktime(year, month, day) %>
+    <% break if current_date.day != day %>
+    <td id="<%= id_for(year, month, day) %>" class="<%= "weekend" if weekend?(current_date) %>">
+      <%= day %>
+    </td>
+  <% end %>
+</tr>
