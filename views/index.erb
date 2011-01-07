@@ -8,15 +8,21 @@
   <script type="text/javascript" src="/jquery-ui-1.8.7.min.js"></script>
   <script>
     $(function() {
+      var mark_vacation = function(fn) {
+        return function() {
+          fn.apply(this, arguments);
+          update_count();
+        }
+      };
       var highlight_between_ids = function(from, to) {
         sorted_ids = [parseInt(from, 10), parseInt(to, 10)].sort();
         for(id = sorted_ids[0]; id <= sorted_ids[1]; id += 1) {
           $("#"+id).addClass("vacation");
         }
       };
-      var show_count = function() {
+      var update_count = function() {
         $("#count").text($(".vacation").not(".weekend").length);
-      }
+      };
       var dragging;
       $("td").draggable({
         opacity: 0.7,
@@ -27,11 +33,13 @@
       });
       $("td").droppable({
           hoverClass: 'drophover',
-          over: function(event, ui) {
+          over: mark_vacation(function() {
             highlight_between_ids($(".drophover").attr("id"), $(dragging).attr("id"));
-            show_count();
-          }
+          })
       });
+      $("td").click(mark_vacation(function() {
+        $(this).toggleClass("vacation");
+      }));
     });
   </script>
   <style type="text/css">
