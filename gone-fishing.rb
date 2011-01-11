@@ -1,5 +1,9 @@
 require 'sinatra'
 
+configure do
+  DB = CouchRest.database!("#{ENV['CLOUDANT_URL']}/gone-fishing")
+end
+
 set :views, './views'
 set :public, File.dirname(__FILE__) + '/public'
 
@@ -25,5 +29,16 @@ helpers do
 end
 
 get '/' do
-  erb :index
+  erb :index, :locals => {:vacation_days => []}
+end
+
+post '/' do
+  response = DB.save_doc(params[:vacation_days])
+  content_type :json
+  {:url => "/#{response['id']}"}.to_json
+end
+
+get '/:calendar' do
+  calendar = DB.get(params[:calendar])
+  erb :index, :locals => {:vacation_days => calendar['2011']}
 end

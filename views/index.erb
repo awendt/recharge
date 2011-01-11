@@ -8,6 +8,9 @@
   <script type="text/javascript" src="/jquery-ui-1.8.7.min.js"></script>
   <script>
     $(function() {
+      $.each(<%= vacation_days.inspect %>, function(index, value) {
+        $("#"+value).addClass("vacation");
+      });
       var mark_vacation = function(fn) {
         return function() {
           fn.apply(this, arguments);
@@ -40,6 +43,22 @@
       $("td").click(mark_vacation(function() {
         $(this).toggleClass("vacation");
       }));
+      $("#save").click(function() {
+        $.ajax({
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            vacation_days: {
+              2011: $.makeArray($(".vacation").map(function() {
+                return $(this).attr("id");
+              }))
+            }
+          },
+          success: function(data) {
+            location.href = data.url;
+          }
+        });
+      });
     });
   </script>
   <style type="text/css">
@@ -49,10 +68,12 @@
     #count { margin-top:50px; clear: left; font-size:6em; font-family: Helvetica, Arial, 'sans-serif'}
     tr { list-style-type:none; clear: left; border-top: 1px solid #000; padding:0; margin:0; }
     table { margin: 0 auto; }
+    .button { cursor:pointer; }
   </style>
 </head>
 <body>
   <%= calendar_for(Time.now.year) %>
   <div id="count"></div>
+  <div id="save" class="button">Save</div>
 </body>
 </html>
