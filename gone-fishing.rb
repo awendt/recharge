@@ -43,6 +43,14 @@ get '/favicon.ico' do
 end
 
 get '/:calendar' do
-  calendar = DB.get(params[:calendar])
-  erb :index, :locals => {:vacation_days => calendar['2011']}
+  doc = DB.get(params[:calendar])
+  erb :index, :locals => {:vacation_days => doc['2011']}
+end
+
+post '/:calendar' do
+  doc = DB.get(params[:calendar])
+  doc['2011'] = params[:vacation_days]['2011']
+  response = DB.save_doc(doc)
+  content_type :json
+  {:url => "/#{response['id']}"}.to_json
 end

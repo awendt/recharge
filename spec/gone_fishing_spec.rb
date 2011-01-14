@@ -32,33 +32,60 @@ describe "GoneFishing" do
       DB = couchdb
     end
 
-    describe "saving vacation days" do
-
-      it "should put the days onto the Couch" do
-        couchdb.should_receive(:save_doc).with({"my" => "days"}).and_return({})
-        post '/', {:vacation_days => {:my => :days}}
-      end
-
-      it "should advertise the response as JSON" do
+    shared_examples_for "all updates" do
+      it "advertises the response as JSON" do
         couchdb.should_receive(:save_doc).with(anything).and_return({'id' => 'some_id'})
-        post '/', {:vacation_days => {:my => :days}}
+        post @url, {:vacation_days => {'2011' => %w(20110101 20110102 20110303)}}
         last_response.headers["Content-Type"].should == "application/json"
       end
 
-      it "should send a redirect URL in JSON" do
+      it "returns a redirect URL in JSON" do
         couchdb.should_receive(:save_doc).with(anything).and_return({'id' => 'some_id'})
-        post '/', {:vacation_days => {:my => :days}}
+        post @url, {:vacation_days => {'2011' => %w(20110101 20110102 20110303)}}
         JSON.parse(last_response.body).should ==
             {"url" => "/some_id"}
       end
     end
 
+    describe "saving vacation days" do
+
+      before { @url = '/' }
+
+      it_should_behave_like 'all updates'
+
+      it "should put the days onto the Couch" do
+        couchdb.should_receive(:save_doc).with({"my" => "days"}).and_return({})
+        post '/', {:vacation_days => {:my => :days}}
+      end
+    end
+
     describe "serving a specific calendar" do
       it "should pre-select vacation days" do
-        couchdb.should_receive(:get).with('saved_calendar').and_return({'2011' => %w(20110101 20110102)})
-        get '/saved_calendar'
+        pending 'currently done by JS'
+        couchdb.should_receive(:get).with('doc_id').and_return({'2011' => %w(20110101 20110102)})
+        get '/doc_id'
         last_response.should have_selector("#20110101.vacation")
         last_response.should have_selector("#20110102.vacation")
+      end
+    end
+
+    describe 'updating vacation days' do
+      before do
+        @url = '/doc_id'
+        couchdb.stub(:get).with('doc_id').and_return({
+          '_id' => 'doc_id',
+          '2011' => %w(20110101 20110102)
+        })
+      end
+
+      it_should_behave_like 'all updates'
+
+      it 'should put the days onto the couch' do
+        couchdb.should_receive(:save_doc).with({
+          '_id' => 'doc_id',
+          '2011' => %w(20110101 20110102 20110303)
+        }).and_return({})
+        post '/doc_id', {:vacation_days => {'2011' => %w(20110101 20110102 20110303)}}
       end
     end
   end
