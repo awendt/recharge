@@ -38,6 +38,10 @@ post '/' do
   {:url => "/#{response['id']}"}.to_json
 end
 
+get '/favicon.ico' do
+  not_found
+end
+
 get '/:calendar' do
   calendar = DB.get(params[:calendar])
   erb :index, :locals => {:vacation_days => calendar['2011']}
