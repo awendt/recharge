@@ -1,7 +1,13 @@
 require 'sinatra'
+require 'yaml'
 
 configure do
   DB = CouchRest.database!("#{ENV['CLOUDANT_URL']}/gone-fishing")
+  calendar = YAML.load_file('holidays/de_DE.yml')['de_DE']
+  HOLIDAYS = calendar.inject({}) do |result, event|
+    result[Date.parse(event.first)] = event.last
+    result
+  end
 end
 
 set :views, './views'
@@ -19,7 +25,9 @@ helpers do
       end
       css_classes = []
       css_classes << 'weekend' if weekend?(date)
-      cal << %(<td id="#{date.to_s}" class="#{css_classes.join(' ')}">#{date.day}</td>)
+      css_classes << 'holiday' if holiday?(date)
+      title = holiday?(date) ? HOLIDAYS[date] : ""
+      cal << %(<td id="#{date.to_s}" class="#{css_classes.join(' ')}" title="#{title}">#{date.day}</td>)
       cal << %(</tr>) if date == Date.new(date.year, date.month, -1)
     end
     cal << %(</table>)
@@ -35,6 +43,10 @@ helpers do
     when 2 then "#{args[0]}#{"%02d" % args[1]}"
     else "#{args[0]}#{"%02d" % args[1]}#{"%02d" % args[2]}"
     end
+  end
+
+  def holiday?(date)
+    HOLIDAYS.keys.include?(date)
   end
 
   def month_name_for(month)

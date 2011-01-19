@@ -6,6 +6,7 @@ describe "GoneFishing" do
   before do
     # ugly hack to suppress warnings about 'already initialized constant DB'
     class Object ; remove_const :DB if const_defined?(:DB) ; end
+    YAML.stub!(:load_file)
   end
 
   describe "Homepage" do
