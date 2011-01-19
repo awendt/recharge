@@ -18,8 +18,12 @@ describe "GoneFishing" do
     it "should render a calendar" do
       get '/'
       last_response.should have_selector("table") do |year|
-        year.should have_selector("tr##{Time.now.year}01") do |month|
-          month.should have_selector("td##{Time.now.year}0101")
+        year.should have_selector("tr##{Time.now.year}-01") do |month|
+          month.should have_selector("th", :content => "Jan")
+          month.should have_selector("td##{Time.now.year}-01-01")
+        end
+        year.should have_selector("tr##{Time.now.year}-02") do |month|
+          month.should have_selector("td##{Time.now.year}-02-01")
         end
       end
       last_response.should have_selector(".weekend")

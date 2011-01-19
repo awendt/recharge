@@ -9,7 +9,21 @@ set :public, File.dirname(__FILE__) + '/public'
 
 helpers do
   def calendar_for(year)
-    erb :_calendar, :layout => false, :locals => {:year => year}
+    first = Date.ordinal(year, 1)
+    last = Date.ordinal(year, -1)
+    cal = [%(<table border="0" cellspacing="0" cellpadding="0">)]
+    first.upto(last) do |date|
+      if date.day == 1
+        cal << %(<tr id="#{date.year}-#{'%02d' % date.mon}">)
+        cal << %(<th>#{month_name_for(date.mon)}</th>)
+      end
+      css_classes = []
+      css_classes << 'weekend' if weekend?(date)
+      cal << %(<td id="#{date.to_s}" class="#{css_classes.join(' ')}">#{date.day}</td>)
+      cal << %(</tr>) if date == Date.new(date.year, date.month, -1)
+    end
+    cal << %(</table>)
+    cal.join("\n")
   end
 
   def weekend?(time)
