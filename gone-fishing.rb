@@ -13,23 +13,31 @@ end
 set :views, './views'
 set :public, File.dirname(__FILE__) + '/public'
 
+class Date
+  def to_s
+    strftime('%Y%m%d')
+  end
+end
+
 helpers do
   def calendar_for(year)
     first = Date.ordinal(year, 1)
     last = Date.ordinal(year, -1)
     cal = [%(<table border="0" cellspacing="0" cellpadding="0">)]
+    cal << %(<tbody>)
     first.upto(last) do |date|
       if date.day == 1
-        cal << %(<tr id="#{date.year}-#{'%02d' % date.mon}">)
+        cal << %(<tr id="#{date.year}#{'%02d' % date.mon}">)
         cal << %(<th>#{month_name_for(date.mon)}</th>)
       end
       css_classes = []
       css_classes << 'weekend' if weekend?(date)
       css_classes << 'holiday' if holiday?(date)
       title = holiday?(date) ? HOLIDAYS[date] : ""
-      cal << %(<td id="#{date.to_s}" class="#{css_classes.join(' ')}" title="#{title}">#{date.day}</td>)
+      cal << %(<td id="#{date}" class="#{css_classes.join(' ')}" title="#{title}">#{date.day}</td>)
       cal << %(</tr>) if date == Date.new(date.year, date.month, -1)
     end
+    cal << %(</tbody>)
     cal << %(</table>)
     cal.join("\n")
   end
