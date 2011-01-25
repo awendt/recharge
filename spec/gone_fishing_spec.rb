@@ -68,7 +68,6 @@ describe "GoneFishing" do
 
     describe "serving a specific calendar" do
       it "should pre-select vacation days" do
-        pending 'currently done by JS'
         couchdb.should_receive(:get).with('doc_id').and_return({'2011' => %w(20110101 20110102)})
         get '/doc_id'
         last_response.should have_selector("#20110101.vacation")

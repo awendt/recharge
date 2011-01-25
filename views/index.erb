@@ -8,9 +8,6 @@
   <script type="text/javascript" src="/jquery-ui-1.8.7.min.js"></script>
   <script>
     $(function() {
-      $.each(<%= vacation_days.inspect %>, function(index, value) {
-        $("#"+value).addClass("vacation");
-      });
       var mark_vacation = function(fn) {
         return function() {
           fn.apply(this, arguments);
@@ -114,7 +111,7 @@
   </style>
 </head>
 <body>
-  <%= calendar_for(Time.now.year) %>
+  <%= calendar_for(Time.now.year, vacation_days) %>
   <div id="footer">
     <div id="count"></div>
     <button id="save">Save</div>

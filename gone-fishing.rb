@@ -20,7 +20,7 @@ class Date
 end
 
 helpers do
-  def calendar_for(year)
+  def calendar_for(year, vacation_days)
     first = Date.ordinal(year, 1)
     last = Date.ordinal(year, -1)
     cal = [%(<table border="0" cellspacing="0" cellpadding="0">)]
@@ -33,6 +33,7 @@ helpers do
       css_classes = []
       css_classes << 'weekend' if weekend?(date)
       css_classes << 'holiday' if holiday?(date)
+      css_classes << 'vacation' if vacation_days.include?(date.to_s)
       title = holiday?(date) ? HOLIDAYS[date] : ""
       cal << %(<td id="#{date}" class="#{css_classes.join(' ')}" title="#{title}">#{date.day}</td>)
       cal << %(</tr>) if date == Date.new(date.year, date.month, -1)
