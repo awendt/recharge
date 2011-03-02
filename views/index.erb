@@ -3,7 +3,7 @@
 <head>
   <meta charset=utf-8 />
   <title>Gone Fishing</title>
-  <!-- <link rel="stylesheet" type="text/css" media="screen" href="css/master.css" /> -->
+  <link rel="stylesheet" type="text/css" media="screen" href="/recharge.css" />
   <script type="text/javascript" src="/jquery-1.4.4.min.js"></script>
   <script type="text/javascript" src="/jquery-ui-1.8.7.min.js"></script>
   <script>
@@ -76,54 +76,9 @@
       update_count();
     });
   </script>
-  <style type="text/css">
-    body { font-family: 'Helvetica Neue', Helvetica, Arial, 'sans-serif';  -moz-user-select: none;
-       -khtml-user-select: none;
-       user-select: none;}
-    td { text-align:center; padding: 5px 8px; margin:0; cursor: default; width:20px; float:left; border:1px solid transparent; }
-    .holiday { border:1px dashed black; }
-    .vacation,.vacation_drag { background-color:red; }
-    .weekend,.holiday.active { background-color:#F8B85F; }
-    #footer { margin-top:50px; clear:left; }
-    #count { float: left; font-size:6em; margin-right:50px; }
-    tr { list-style-type:none; clear: left; border-top: 1px solid #000; padding:0; margin:0; }
-    th { padding: 0 10px; }
-    table { margin: 0 auto; }
-    button {
-      font-size:1.2em;
-      margin-top:40px;
-      -moz-border-radius:5px;
-      -webkit-border-radius:5px;
-      -moz-box-shadow:0px 0px 2px rgba(0,0,0,0.4);
-      -webkit-box-shadow:0px 0px 2px rgba(0,0,0,0.4);
-
-      color:rgba(0,0,0,0.9);
-      text-shadow:1px 1px 0px rgba(255,255,255,0.8);
-      border:1px solid rgba(0,0,0,0.5);
-
-      background:-webkit-gradient(linear,0% 0%,0% 100%,from(rgba(255,255,255,1)),to(rgba(185,185,185,1)));
-      background:-moz-linear-gradient(top,rgba(255,255,255,1),rgba(185,185,185,1));
-
-      padding:5px 20px 5px 20px;
-    }
-
-    button:hover {
-      background:rgba(240,240,240,1);
-    }
-
-    button:active, button:focus {
-      background:-webkit-gradient(linear,0% 100%,0% 0%,from(rgba(255,255,255,1)),to(rgba(185,185,185,1)));
-      background:-moz-linear-gradient(bottom,rgba(255,255,255,1),rgba(185,185,185,1));
-    }
-
-    button:disabled {
-      color:rgba(0,0,0,0.4);
-      text-shadow:1px 1px 0px rgba(255,255,255,0.5);
-      background:rgba(220,220,220,1);
-    }
-  </style>
 </head>
 <body>
+  <h1>Re:charge</h1>
   <%= calendar_for(Time.now.year, vacation, holidays) %>
   <div id="footer">
     <div id="count"></div>
