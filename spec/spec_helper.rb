@@ -3,7 +3,7 @@ require 'bundler'
 
 Bundler.require(:default, :test)
 
-require 'gone-fishing'
+require 'recharge'
 
 set :environment, :test
 

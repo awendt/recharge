@@ -2,7 +2,7 @@ require 'sinatra'
 require 'yaml'
 
 configure do
-  DB = CouchRest.database!("#{ENV['CLOUDANT_URL']}/gone-fishing")
+  DB = CouchRest.database!("#{ENV['CLOUDANT_URL']}/recharge")
   calendar = YAML.load_file('holidays/de_DE.yml')['de_DE']
   HOLIDAYS = calendar.inject({}) do |result, event|
     result[Date.parse(event.first)] = event.last

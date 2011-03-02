@@ -3,5 +3,5 @@ require 'bundler'
 
 Bundler.require
 
-require 'gone-fishing'
+require 'recharge'
 run Sinatra::Application
