@@ -6,7 +6,10 @@ describe "GoneFishing" do
   before do
     # ugly hack to suppress warnings about 'already initialized constant DB'
     class Object ; remove_const :DB if const_defined?(:DB) ; end
-    YAML.stub!(:load_file)
+    YAML.stub!(:load_file).and_return({
+      "2011-01-06" => 'Heilige drei Könige',
+      "2011-11-01" => 'Allerheiligen'
+    })
   end
 
   describe "Homepage" do
@@ -80,12 +83,31 @@ describe "GoneFishing" do
     end
 
     describe "serving a specific calendar" do
-      it "should pre-select vacation days" do
-        couchdb.should_receive(:get).with('doc_id').and_return(
-            {'vacation' => {'2011' => %w(20110101 20110102)}})
+      before do
+        couchdb.should_receive(:get).with('doc_id').and_return({
+          'vacation' => {'2011' => %w(20110101 20110102)},
+          'holidays' => {'2011' => %w(20110106)}
+        })
         get '/doc_id'
+      end
+
+      it "should pre-select vacation days" do
         last_response.should have_selector("#20110101.vacation")
         last_response.should have_selector("#20110102.vacation")
+      end
+
+      describe "and marking holidays" do
+
+        it "marks the active ones" do
+          last_response.should have_selector("#20110106.holiday")
+          last_response.should have_selector("#20110106.holiday.active")
+        end
+
+        it "skips the inactive ones" do
+          last_response.should have_selector("#20111101.holiday")
+          last_response.should_not have_selector("#20111101.holiday.active")
+        end
+
       end
     end
 

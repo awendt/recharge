@@ -20,7 +20,7 @@ class Date
 end
 
 helpers do
-  def calendar_for(year, vacation)
+  def calendar_for(year, vacation, holidays)
     first = Date.ordinal(year, 1)
     last = Date.ordinal(year, -1)
     cal = [%(<table border="0" cellspacing="0" cellpadding="0">)]
@@ -32,7 +32,8 @@ helpers do
       end
       css_classes = []
       css_classes << 'weekend' if weekend?(date)
-      css_classes << 'holiday' << 'active' if holiday?(date)
+      css_classes << 'holiday' if holiday?(date)
+      css_classes << 'active' if holidays.include?(date.to_s)
       css_classes << 'vacation' if vacation.include?(date.to_s)
       title = holiday?(date) ? HOLIDAYS[date] : ""
       cal << %(<td id="#{date}" class="#{css_classes.join(' ')}" title="#{title}">#{date.day}</td>)
@@ -64,7 +65,7 @@ helpers do
 end
 
 get '/' do
-  erb :index, :locals => {:vacation => []}
+  erb :index, :locals => {:vacation => [], :holidays => HOLIDAYS.keys.map(&:to_s)}
 end
 
 post '/' do
@@ -79,7 +80,10 @@ end
 
 get '/:calendar' do
   doc = DB.get(params[:calendar])
-  erb :index, :locals => {:vacation => doc['vacation']['2011']}
+  erb :index, :locals => {
+    :vacation => doc['vacation']['2011'],
+    :holidays => doc['holidays']['2011']
+  }
 end
 
 post '/:calendar' do
