@@ -20,7 +20,7 @@ class Date
 end
 
 helpers do
-  def calendar_for(year, vacation_days)
+  def calendar_for(year, vacation)
     first = Date.ordinal(year, 1)
     last = Date.ordinal(year, -1)
     cal = [%(<table border="0" cellspacing="0" cellpadding="0">)]
@@ -33,7 +33,7 @@ helpers do
       css_classes = []
       css_classes << 'weekend' if weekend?(date)
       css_classes << 'holiday' << 'active' if holiday?(date)
-      css_classes << 'vacation' if vacation_days.include?(date.to_s)
+      css_classes << 'vacation' if vacation.include?(date.to_s)
       title = holiday?(date) ? HOLIDAYS[date] : ""
       cal << %(<td id="#{date}" class="#{css_classes.join(' ')}" title="#{title}">#{date.day}</td>)
       cal << %(</tr>) if date == Date.new(date.year, date.month, -1)
@@ -64,11 +64,11 @@ helpers do
 end
 
 get '/' do
-  erb :index, :locals => {:vacation_days => []}
+  erb :index, :locals => {:vacation => []}
 end
 
 post '/' do
-  response = DB.save_doc(params[:vacation_days])
+  response = DB.save_doc(:vacation => params[:vacation], :holidays => params[:holidays])
   content_type :json
   {:url => "/#{response['id']}"}.to_json
 end
@@ -79,12 +79,13 @@ end
 
 get '/:calendar' do
   doc = DB.get(params[:calendar])
-  erb :index, :locals => {:vacation_days => doc['2011']}
+  erb :index, :locals => {:vacation => doc['vacation']['2011']}
 end
 
 post '/:calendar' do
   doc = DB.get(params[:calendar])
-  doc['2011'] = params[:vacation_days]['2011']
+  doc['vacation']['2011'] = params[:vacation]['2011']
+  doc['holidays']['2011'] = params[:holidays]['2011']
   response = DB.save_doc(doc)
   content_type :json
   {:url => "/#{response['id']}"}.to_json

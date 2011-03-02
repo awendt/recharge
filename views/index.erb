@@ -57,8 +57,13 @@
           type: 'POST',
           dataType: 'json',
           data: {
-            vacation_days: {
+            vacation: {
               2011: $.makeArray($(".vacation").map(function() {
+                return $(this).attr("id");
+              }))
+            },
+            holidays: {
+              2011: $.makeArray($(".holiday.active").map(function() {
                 return $(this).attr("id");
               }))
             }
@@ -118,7 +123,7 @@
   </style>
 </head>
 <body>
-  <%= calendar_for(Time.now.year, vacation_days) %>
+  <%= calendar_for(Time.now.year, vacation) %>
   <div id="footer">
     <div id="count"></div>
     <button id="save">Save</div>
