@@ -32,7 +32,7 @@ helpers do
       end
       css_classes = []
       css_classes << 'weekend' if weekend?(date)
-      css_classes << 'holiday' if holiday?(date)
+      css_classes << 'holiday' << 'active' if holiday?(date)
       css_classes << 'vacation' if vacation_days.include?(date.to_s)
       title = holiday?(date) ? HOLIDAYS[date] : ""
       cal << %(<td id="#{date}" class="#{css_classes.join(' ')}" title="#{title}">#{date.day}</td>)

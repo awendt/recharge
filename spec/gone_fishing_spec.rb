@@ -11,13 +11,13 @@ describe "GoneFishing" do
 
   describe "Homepage" do
 
-    it "should respond" do
-      get '/'
+    before { get '/' }
+
+    it "responds" do
       last_response.should be_ok
     end
 
-    it "should render a calendar" do
-      get '/'
+    it "renders a calendar" do
       last_response.should have_selector("table") do |year|
         year.should have_selector("tr##{Time.now.year}01") do |month|
           month.should have_selector("th", :content => "Jan")
@@ -27,7 +27,11 @@ describe "GoneFishing" do
           month.should have_selector("td##{Time.now.year}0201")
         end
       end
+    end
+
+    it 'renders weekends and holidays by default' do
       last_response.should have_selector(".weekend")
+      last_response.should have_selector(".holiday.active")
     end
 
   end

@@ -22,7 +22,7 @@
         }
       };
       var update_count = function() {
-        $("#count").text($(".vacation,.vacation_drag").not(".weekend,.holiday").length);
+        $("#count").text($(".vacation,.vacation_drag").not(".weekend,.holiday.active").length);
       };
       var dragging;
       $("td").draggable({
@@ -45,8 +45,12 @@
             $(".vacation_drag").removeClass("vacation_drag").addClass("vacation");
           })
       });
-      $("td").click(mark_vacation(function() {
-        $(this).toggleClass("vacation");
+      $("td").click(mark_vacation(function(e) {
+        if (e.shiftKey && $(this).hasClass("holiday")) {
+          $(this).toggleClass("active");
+        } else {
+          $(this).toggleClass("vacation");
+        }
       }));
       $("#save").click(function() {
         $.ajax({
@@ -67,10 +71,13 @@
     });
   </script>
   <style type="text/css">
-    body { font-family: 'Helvetica Neue', Helvetica, Arial, 'sans-serif'; }
-    td { text-align:center; padding: 5px 8px; margin:0; cursor: default; width:20px; float:left; }
-    .weekend,.holiday { background-color:#F8B85F; }
-    .vacation,.vacation_drag { background-color:red; !important }
+    body { font-family: 'Helvetica Neue', Helvetica, Arial, 'sans-serif';  -moz-user-select: none;
+       -khtml-user-select: none;
+       user-select: none;}
+    td { text-align:center; padding: 5px 8px; margin:0; cursor: default; width:20px; float:left; border:1px solid transparent; }
+    .holiday { border:1px dashed black; }
+    .vacation,.vacation_drag { background-color:red; }
+    .weekend,.holiday.active { background-color:#F8B85F; }
     #footer { margin-top:50px; clear:left; }
     #count { float: left; font-size:6em; margin-right:50px; }
     tr { list-style-type:none; clear: left; border-top: 1px solid #000; padding:0; margin:0; }
