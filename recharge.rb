@@ -20,7 +20,7 @@ class Date
 end
 
 helpers do
-  def calendar_for(year, vacation, holidays)
+  def calendar_for(year, vacation, active_holidays)
     first = Date.ordinal(year, 1)
     last = Date.ordinal(year, -1)
     cal = [%(<table border="0" cellspacing="0" cellpadding="0">)]
@@ -33,7 +33,7 @@ helpers do
       css_classes = []
       css_classes << 'weekend' if weekend?(date)
       css_classes << 'holiday' if holiday?(date)
-      css_classes << 'active' if holidays.include?(date.to_s)
+      css_classes << 'active' if active_holidays.include?(date.to_s)
       css_classes << 'vacation' if vacation.include?(date.to_s)
       title = holiday?(date) ? HOLIDAYS[date] : ""
       cal << %(<td id="#{date}" class="#{css_classes.join(' ')}" title="#{title}">#{date.day}</td>)
@@ -71,14 +71,14 @@ end
 post '/' do
   response = DB.save_doc(:vacation => params[:vacation], :holidays => params[:holidays])
   content_type :json
-  {:url => "/#{response['id']}"}.to_json
+  {:url => "/cal/#{response['id']}"}.to_json
 end
 
 get '/favicon.ico' do
   not_found
 end
 
-get '/:calendar' do
+get '/cal/:calendar' do
   doc = DB.get(params[:calendar])
   erb :index, :locals => {
     :vacation => doc['vacation']['2011'],
@@ -86,11 +86,11 @@ get '/:calendar' do
   }
 end
 
-post '/:calendar' do
+post '/cal/:calendar' do
   doc = DB.get(params[:calendar])
   doc['vacation']['2011'] = params[:vacation]['2011']
   doc['holidays']['2011'] = params[:holidays]['2011']
   response = DB.save_doc(doc)
   content_type :json
-  {:url => "/#{response['id']}"}.to_json
+  {:url => "/cal/#{response['id']}"}.to_json
 end

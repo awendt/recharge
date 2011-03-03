@@ -63,7 +63,7 @@ describe "GoneFishing" do
           :holidays => {'2011' => %w(20110106)}
         }
         JSON.parse(last_response.body).should ==
-            {"url" => "/some_id"}
+            {"url" => "/cal/some_id"}
       end
     end
 
@@ -78,7 +78,7 @@ describe "GoneFishing" do
           :vacation => {"my" => "vacation"},
           :holidays => {"my" => "holidays"}
         }).and_return({})
-        post '/', {:vacation => {:my => :vacation}, :holidays => {:my => :holidays}}
+        post @url, {:vacation => {:my => :vacation}, :holidays => {:my => :holidays}}
       end
     end
 
@@ -88,7 +88,7 @@ describe "GoneFishing" do
           'vacation' => {'2011' => %w(20110101 20110102)},
           'holidays' => {'2011' => %w(20110106)}
         })
-        get '/doc_id'
+        get '/cal/doc_id'
       end
 
       it "should pre-select vacation days" do
@@ -113,7 +113,7 @@ describe "GoneFishing" do
 
     describe 'updating' do
       before do
-        @url = '/doc_id'
+        @url = '/cal/doc_id'
         couchdb.stub(:get).with('doc_id').and_return({
           '_id' => 'doc_id',
           'vacation' => {'2011' => %w(20110101 20110102)},
@@ -129,7 +129,7 @@ describe "GoneFishing" do
           'vacation' => {'2011' => %w(20110101 20110102 20110303)},
           'holidays' => {'2011' => %w(20110106)}
         }).and_return({})
-        post '/doc_id', {
+        post @url, {
           :vacation => {'2011' => %w(20110101 20110102 20110303)},
           :holidays => {'2011' => %w(20110106)}
         }
