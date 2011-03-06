@@ -37,6 +37,9 @@ describe "Recharge" do
       last_response.should have_selector(".holiday.active")
     end
 
+    it 'labels the button "Save"' do
+      last_response.should have_selector("button", :content => "Save")
+    end
   end
 
   describe "connecting to CouchDB" do
@@ -101,6 +104,10 @@ describe "Recharge" do
       it "should pre-select vacation days" do
         last_response.should have_selector("#20110101.vacation")
         last_response.should have_selector("#20110102.vacation")
+      end
+
+      it 'changes the button label to "Update"' do
+        last_response.should have_selector("button", :content => "Update")
       end
 
       describe "and marking holidays" do

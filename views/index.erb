@@ -30,7 +30,13 @@
         }
       };
       var update_count = function() {
-        $("#count").text($(".vacation,.vacation_drag").not(".weekend,.holiday.active").length);
+        var count = $(".vacation,.vacation_drag").not(".weekend,.holiday.active").length;
+        $("#count").text(count);
+        if (count == 0) {
+          $("#save").attr('disabled', 'disabled');
+        } else {
+          $("#save").attr('disabled', '');
+        }
       };
       var dragging;
       $("td").draggable({
@@ -90,7 +96,7 @@
   <%= calendar_for(Time.now.year, vacation, holidays) %>
   <div id="footer">
     <div id="count"></div>
-    <button id="save">Save</div>
+    <button id="save"><%= button_label %></button>
   </div>
 </body>
 </html>
