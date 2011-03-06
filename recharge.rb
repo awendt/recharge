@@ -69,6 +69,8 @@ get '/' do
 end
 
 post '/' do
+  halt 406, "Please mark anything as your vacation!" \
+      if !params[:vacation] || params[:vacation].empty? || params[:vacation]['2011'].empty?
   response = DB.save_doc(:vacation => params[:vacation], :holidays => params[:holidays])
   content_type :json
   {:url => "/cal/#{response['id']}"}.to_json
@@ -87,6 +89,8 @@ get '/cal/:calendar' do
 end
 
 post '/cal/:calendar' do
+  halt 406, "Please mark anything as your vacation!" \
+      if !params[:vacation] || params[:vacation].empty? || params[:vacation]['2011'].empty?
   doc = DB.get(params[:calendar])
   doc['vacation']['2011'] = params[:vacation]['2011']
   doc['holidays']['2011'] = params[:holidays]['2011']

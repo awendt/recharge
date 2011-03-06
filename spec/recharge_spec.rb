@@ -1,7 +1,7 @@
 require 'rack/test'
 require File.dirname(__FILE__) + '/spec_helper'
 
-describe "GoneFishing" do
+describe "Recharge" do
 
   before do
     # ugly hack to suppress warnings about 'already initialized constant DB'
@@ -65,6 +65,13 @@ describe "GoneFishing" do
         JSON.parse(last_response.body).should ==
             {"url" => "/cal/some_id"}
       end
+
+      it 'halts on documents without vacation' do
+        params = {:holidays => {'2011' => %w(20110106)}}
+        couchdb.should_not_receive(:save_doc)
+        post @url, params.merge(:vacation => {'2011' => []})
+        post @url, params.merge(:vacation => {'2011' => ""})
+      end
     end
 
     describe "saving" do
@@ -75,10 +82,10 @@ describe "GoneFishing" do
 
       it "should put holidays and vacation days onto the Couch" do
         couchdb.should_receive(:save_doc).with({
-          :vacation => {"my" => "vacation"},
+          :vacation => {'2011' => %w(20110101)},
           :holidays => {"my" => "holidays"}
         }).and_return({})
-        post @url, {:vacation => {:my => :vacation}, :holidays => {:my => :holidays}}
+        post @url, {:vacation => {'2011' => %w(20110101)}, :holidays => {:my => :holidays}}
       end
     end
 
