@@ -1,5 +1,5 @@
 source :gemcutter
-gem 'sinatra', '1.0'
+gem 'sinatra', '1.2'
 gem 'couchrest'
 
 group :test do
