@@ -66,6 +66,11 @@ helpers do
   def button_label
     request.fullpath == '/' ? "Save" : "Update"
   end
+
+  def halt_on_empty_vacation
+    halt 406, "Please mark anything as your vacation!" \
+        if !params[:vacation] || params[:vacation].empty? || params[:vacation]['2011'].empty?
+  end
 end
 
 get '/' do
@@ -73,8 +78,7 @@ get '/' do
 end
 
 post '/' do
-  halt 406, "Please mark anything as your vacation!" \
-      if !params[:vacation] || params[:vacation].empty? || params[:vacation]['2011'].empty?
+  halt_on_empty_vacation
   response = DB.save_doc(:vacation => params[:vacation], :holidays => params[:holidays])
   content_type :json
   {:url => "/cal/#{response['id']}"}.to_json
@@ -93,8 +97,7 @@ get '/cal/:calendar' do
 end
 
 post '/cal/:calendar' do
-  halt 406, "Please mark anything as your vacation!" \
-      if !params[:vacation] || params[:vacation].empty? || params[:vacation]['2011'].empty?
+  halt_on_empty_vacation
   doc = DB.get(params[:calendar])
   doc['vacation']['2011'] = params[:vacation]['2011']
   doc['holidays']['2011'] = params[:holidays]['2011']
