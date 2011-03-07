@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'yaml'
+require 'rack/csrf'
 
 configure do
   DB = CouchRest.database!("#{ENV['CLOUDANT_URL']}/recharge")
@@ -8,6 +9,12 @@ configure do
     result[Date.parse(event.first)] = event.last
     result
   end
+end
+
+enable :sessions
+
+configure :production do
+  use Rack::Csrf, :raise => true
 end
 
 set :views, './views'
@@ -70,6 +77,10 @@ helpers do
   def halt_on_empty_vacation
     halt 406, "Please mark anything as your vacation!" \
         if !params[:vacation] || params[:vacation].empty? || params[:vacation]['2011'].empty?
+  end
+
+  def csrf_token
+    Rack::Csrf.csrf_token(env)
   end
 end
 

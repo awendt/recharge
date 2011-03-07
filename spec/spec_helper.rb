@@ -17,9 +17,6 @@ RSpec.configure do |config|
   config.include(Webrat::Methods)
   config.include(Webrat::Matchers)
 
-  config.before(:each) do
-  end
-
   def app
     Sinatra::Application
   end
