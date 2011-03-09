@@ -116,3 +116,17 @@ post '/cal/:calendar' do
   content_type :json
   {:url => "/cal/#{response['id']}"}.to_json
 end
+
+get '/ics/:calendar' do
+  doc = DB.get(params[:calendar])
+  calendar = Icalendar::Calendar.new
+  doc['vacation']['2011'].each do |day|
+    calendar.event do
+      dtstart Date.parse(day)
+      dtend Date.parse(day).succ
+      summary 'Vacation'
+    end
+  end
+  content_type :ics
+  calendar.to_ical
+end

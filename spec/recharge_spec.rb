@@ -149,5 +149,29 @@ describe "Recharge" do
         }
       end
     end
+
+    describe "exporting iCalendar" do
+      before do
+        couchdb.stub(:get).with('doc_id').and_return({
+          '_id' => 'doc_id',
+          'vacation' => {'2011' => %w(20110101 20110102)}
+        })
+      end
+
+      it "advertises the response as iCal format" do
+        get '/ics/doc_id'
+        last_response.headers["Content-Type"].should =~ %r(text/calendar;)
+      end
+
+      it 'returns vacations in iCalendar format' do
+        get '/ics/doc_id'
+        last_response.body.should =~ /^BEGIN:VCALENDAR/
+        last_response.body.should =~
+            /BEGIN:VEVENT.+DTEND:20110102.+DTSTART:20110101.+SUMMARY:Vacation.+END:VEVENT/m
+        last_response.body.should =~
+            /BEGIN:VEVENT.+DTEND:20110103.+DTSTART:20110102.+SUMMARY:Vacation.+END:VEVENT/m
+      end
+    end
+
   end
 end
