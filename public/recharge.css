@@ -90,6 +90,7 @@ button {
 
 button:hover {
   background:rgba(240,240,240,1);
+  cursor:pointer;
 }
 
 button:active, button:focus {
