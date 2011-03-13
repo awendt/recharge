@@ -40,11 +40,17 @@ td {
   margin-top:50px;
   clear:left;
 }
+
 #count {
   float: left;
   font-size:6em;
   margin-right:100px;
   text-shadow:1px 1px 0 #CCCCCC;
+}
+
+
+#actions {
+  padding-top:30px;
 }
 
 tr {
@@ -65,7 +71,6 @@ table {
 
 button {
   font-size:1.2em;
-  margin-top:40px;
   -moz-border-radius:5px;
   -webkit-border-radius:5px;
   -moz-box-shadow:0px 0px 2px rgba(0,0,0,0.4);
@@ -78,7 +83,9 @@ button {
   background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,1)), to(rgba(185,185,185,1)));
   background:-moz-linear-gradient(top,rgba(255,255,255,1),rgba(185,185,185,1));
 
+  margin-bottom:10px;
   padding:5px 20px 5px 20px;
+  display:block;
 }
 
 button:hover {

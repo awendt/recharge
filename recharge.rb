@@ -82,6 +82,11 @@ helpers do
   def csrf_token
     Rack::Csrf.csrf_token(env)
   end
+
+  def link_to_icalendar_export
+    %Q!<span id="ics_export"><a href="/ics/#{params[:calendar]}">iCalendar export</a></span>! \
+        if request.fullpath =~ /^\/cal\//
+  end
 end
 
 get '/' do

@@ -40,6 +40,10 @@ describe "Recharge" do
     it 'labels the button "Save"' do
       last_response.should have_selector("button", :content => "Save")
     end
+
+    it 'does not render a link to iCalendar export' do
+      last_response.should_not have_selector("a[href*='/ics/']")
+    end
   end
 
   describe "connecting to CouchDB" do
@@ -108,6 +112,10 @@ describe "Recharge" do
 
       it 'changes the button label to "Update"' do
         last_response.should have_selector("button", :content => "Update")
+      end
+
+      it 'renders a link to iCalendar export' do
+        last_response.should have_selector("a[href='/ics/doc_id']")
       end
 
       describe "and marking holidays" do
