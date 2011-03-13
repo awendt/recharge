@@ -83,8 +83,37 @@ helpers do
     Rack::Csrf.csrf_token(env)
   end
 
+  def clippy(text, bgcolor='#FFFFFF')
+    html = <<-EOF
+      <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+              width="110"
+              height="14"
+              id="clippy" >
+      <param name="movie" value="/clippy.swf"/>
+      <param name="allowScriptAccess" value="always" />
+      <param name="quality" value="high" />
+      <param name="scale" value="noscale" />
+      <param NAME="FlashVars" value="text=#{text}">
+      <param name="bgcolor" value="#{bgcolor}">
+      <embed src="/clippy.swf"
+             width="110"
+             height="14"
+             name="clippy"
+             quality="high"
+             allowScriptAccess="always"
+             type="application/x-shockwave-flash"
+             pluginspage="http://www.macromedia.com/go/getflashplayer"
+             FlashVars="text=#{text}"
+             bgcolor="#{bgcolor}"
+      />
+      </object>
+    EOF
+  end
+
   def link_to_icalendar_export
-    %Q!<span id="ics_export"><a href="/ics/#{params[:calendar]}">iCalendar export</a></span>! \
+    calendar_path = "/ics/#{params[:calendar]}"
+    calendar_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}#{calendar_path}"
+    %Q!<span id="ics"><a href="#{calendar_path}">Calendar URL</a>#{clippy(calendar_url)}</span>! \
         if request.fullpath =~ /^\/cal\//
   end
 end
