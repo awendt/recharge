@@ -154,6 +154,7 @@ end
 get '/ics/:calendar' do
   doc = DB.get(params[:calendar])
   calendar = Icalendar::Calendar.new
+  calendar.custom_property("X-WR-CALNAME", "Vacation")
   doc['vacation']['2011'].each do |day|
     calendar.event do
       dtstart Date.parse(day)

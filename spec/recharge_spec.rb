@@ -179,6 +179,11 @@ describe "Recharge" do
         last_response.body.should =~
             /BEGIN:VEVENT.+DTEND:20110103.+DTSTART:20110102.+SUMMARY:Vacation.+END:VEVENT/m
       end
+
+      it 'assigns a display name for the calendar' do
+        get '/ics/doc_id'
+        last_response.body.should =~ /X-WR-CALNAME:Vacation/m
+      end
     end
 
   end
