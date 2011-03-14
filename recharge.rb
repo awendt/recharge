@@ -116,6 +116,19 @@ helpers do
     %Q!<span id="ics"><a href="#{calendar_path}">Calendar URL</a>#{clippy(calendar_url)}</span>! \
         if request.fullpath =~ /^\/cal\//
   end
+
+  def ranges_from(array)
+    ranges = []
+    left, right = array.first, nil
+    array.each do |obj|
+      if right && obj != right.succ
+        ranges << Range.new(left,right)
+        left = obj
+      end
+      right = obj
+    end
+    ranges << Range.new(left,right)
+  end
 end
 
 get '/' do
@@ -155,10 +168,10 @@ get '/ics/:calendar' do
   doc = DB.get(params[:calendar])
   calendar = Icalendar::Calendar.new
   calendar.custom_property("X-WR-CALNAME", "Vacation")
-  doc['vacation']['2011'].each do |day|
+  ranges_from(doc['vacation']['2011']).each do |vacation|
     calendar.event do
-      dtstart Date.parse(day)
-      dtend Date.parse(day).succ
+      dtstart Date.parse(vacation.begin)
+      dtend Date.parse(vacation.last).succ
       summary 'Vacation'
     end
   end

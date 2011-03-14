@@ -162,7 +162,7 @@ describe "Recharge" do
       before do
         couchdb.stub(:get).with('doc_id').and_return({
           '_id' => 'doc_id',
-          'vacation' => {'2011' => %w(20110101 20110102)}
+          'vacation' => {'2011' => %w(20110101 20110102 20110104)}
         })
       end
 
@@ -171,13 +171,14 @@ describe "Recharge" do
         last_response.headers["Content-Type"].should =~ %r(text/calendar;)
       end
 
-      it 'returns vacations in iCalendar format' do
+      it 'groups vacations in ranges' do
         get '/ics/doc_id'
         last_response.body.should =~ /^BEGIN:VCALENDAR/
+        last_response.body.scan(/BEGIN:VEVENT/).should have(2).items
         last_response.body.should =~
-            /BEGIN:VEVENT.+DTEND:20110102.+DTSTART:20110101.+SUMMARY:Vacation.+END:VEVENT/m
+            /BEGIN:VEVENT.+DTEND:20110103.+DTSTART:20110101.+SUMMARY:Vacation.+END:VEVENT/m
         last_response.body.should =~
-            /BEGIN:VEVENT.+DTEND:20110103.+DTSTART:20110102.+SUMMARY:Vacation.+END:VEVENT/m
+            /BEGIN:VEVENT.+DTEND:20110105.+DTSTART:20110104.+SUMMARY:Vacation.+END:VEVENT/m
       end
 
       it 'assigns a display name for the calendar' do
