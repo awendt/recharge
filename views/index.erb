@@ -45,6 +45,7 @@
         appendTo: 'body',
         start: function(event, ui) {
           dragging = $(this);
+          ui.helper.removeClass("friday").removeClass("monday");
         },
         stop: mark_vacation(function() {
           $(".vacation_drag").removeClass("vacation_drag").addClass("vacation");
