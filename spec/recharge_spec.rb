@@ -24,7 +24,7 @@ describe "Recharge" do
       last_response.should have_selector("table") do |year|
         year.should have_selector("tr##{Time.now.year}01") do |month|
           month.should have_selector("th", :content => "Jan")
-          month.should have_selector("td##{Time.now.year}0101")
+          month.should have_selector("td##{Time.now.year}0103")
         end
         year.should have_selector("tr##{Time.now.year}02") do |month|
           month.should have_selector("td##{Time.now.year}0201")
@@ -32,8 +32,13 @@ describe "Recharge" do
       end
     end
 
-    it 'renders weekends and holidays by default' do
-      last_response.should have_selector(".weekend")
+    it 'skips weekends' do
+      last_response.should_not have_selector("td#20110102")
+    end
+
+    it 'renders mondays, fridays and holidays by default' do
+      last_response.should have_selector(".monday")
+      last_response.should have_selector(".friday")
       last_response.should have_selector(".holiday.active")
     end
 
@@ -99,15 +104,15 @@ describe "Recharge" do
     describe "serving a specific calendar" do
       before do
         couchdb.should_receive(:get).with('doc_id').and_return({
-          'vacation' => {'2011' => %w(20110101 20110102)},
+          'vacation' => {'2011' => %w(20110201 20110202)},
           'holidays' => {'2011' => %w(20110106)}
         })
         get '/cal/doc_id'
       end
 
       it "should pre-select vacation days" do
-        last_response.should have_selector("#20110101.vacation")
-        last_response.should have_selector("#20110102.vacation")
+        last_response.should have_selector("#20110201.vacation")
+        last_response.should have_selector("#20110202.vacation")
       end
 
       it 'changes the button label to "Update"' do

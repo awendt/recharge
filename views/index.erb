@@ -30,7 +30,7 @@
         }
       };
       var update_count = function() {
-        var count = $(".vacation,.vacation_drag").not(".weekend,.holiday.active").length;
+        var count = $(".vacation,.vacation_drag").not(".holiday.active").length;
         $("#count").text(count);
         if (count == 0) {
           $("#save").attr('disabled', 'disabled');
