@@ -4,7 +4,7 @@ body {
   -khtml-user-select: none;
   user-select: none;
   padding:30px;
-  background:url(background.jpg) no-repeat center;
+  background:url(background.jpg) repeat-y center;
 }
 
 .wrapper {
