@@ -81,7 +81,12 @@ helpers do
   end
 
   def button_label
-    request.fullpath == '/' ? "Save" : "Update"
+    case request.fullpath
+    when '/', %r(^/20[0-9]{2}$)
+      "Save"
+    else
+      "Update"
+    end
   end
 
   def halt_on_empty_vacation
@@ -139,10 +144,18 @@ helpers do
     end
     ranges << Range.new(left,right)
   end
+
+  def default_params
+    {:vacation => [], :holidays => HOLIDAYS.keys.map(&:to_s), :year => Time.now.year}
+  end
 end
 
 get '/' do
-  erb :index, :locals => {:vacation => [], :holidays => HOLIDAYS.keys.map(&:to_s)}
+  erb :index, :locals => default_params
+end
+
+get '/:year' do |year|
+  erb :index, :locals => default_params.merge(:year => year.to_i)
 end
 
 post '/' do
@@ -156,12 +169,10 @@ get '/favicon.ico' do
   not_found
 end
 
-get '/cal/:calendar' do
-  doc = DB.get(params[:calendar])
-  erb :index, :locals => {
-    :vacation => doc['vacation']['2011'],
-    :holidays => doc['holidays']['2011']
-  }
+get '/cal/:calendar' do |cal|
+  doc = DB.get(cal)
+  erb :index, :locals => default_params.merge(:vacation => doc['vacation']['2011'],
+      :holidays => doc['holidays']['2011'])
 end
 
 post '/cal/:calendar' do

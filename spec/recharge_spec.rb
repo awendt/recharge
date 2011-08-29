@@ -51,6 +51,34 @@ describe "Recharge" do
     end
   end
 
+  describe 'serving specific year' do
+    before { get '/2012' }
+
+    it "responds" do
+      last_response.should be_ok
+    end
+
+    it "renders a calendar" do
+      last_response.should have_selector("table") do |year|
+        year.should have_selector("tr#201201") do |month|
+          month.should have_selector("th", :content => "Jan")
+          month.should have_selector("td#20120103")
+        end
+        year.should have_selector("tr#201202") do |month|
+          month.should have_selector("td#20120201")
+        end
+      end
+    end
+
+    it 'labels the button "Save"' do
+      last_response.should have_selector("button", :content => "Save")
+    end
+
+    it 'does not render a link to iCalendar export' do
+      last_response.should_not have_selector("a[href*='/ics/']")
+    end
+  end
+
   describe "connecting to CouchDB" do
     let(:couchdb) { mock(CouchRest::Database) }
 
