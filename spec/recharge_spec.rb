@@ -129,6 +129,21 @@ describe "Recharge" do
       end
     end
 
+    describe "saving specific year" do
+
+      before { @url = '/2012' }
+
+      it_should_behave_like 'all updates'
+
+      it "should put holidays and vacation days onto the Couch" do
+        couchdb.should_receive(:save_doc).with({
+          :vacation => {'2012' => %w(20120101)},
+          :holidays => {"my" => "holidays"}
+        }).and_return({})
+        post @url, {:vacation => {'2012' => %w(20120101)}, :holidays => {:my => :holidays}}
+      end
+    end
+
     describe "serving a specific calendar" do
       before do
         couchdb.should_receive(:get).with('doc_id').and_return({

@@ -165,6 +165,13 @@ post '/' do
   {:url => "/cal/#{response['id']}"}.to_json
 end
 
+post '/:year' do |year|
+  halt_on_empty_vacation
+  response = DB.save_doc(:vacation => params[:vacation], :holidays => params[:holidays])
+  content_type :json
+  {:url => "/cal/#{response['id']}"}.to_json
+end
+
 get '/favicon.ico' do
   not_found
 end
