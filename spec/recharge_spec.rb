@@ -189,13 +189,25 @@ describe "Recharge" do
           :holidays => {'2011' => %w(20110106)}
         }
       end
+
+      it 'does not overwrite but merges the result' do
+        couchdb.should_receive(:save_doc).with({
+          '_id' => 'doc_id',
+          'vacation' => {'2011' => %w(20110101 20110102), '2012' => %w(20120101)},
+          'holidays' => {'2011' => %w(20110106), '2012' => %w(20120106)}
+        }).and_return({})
+        post @url, {
+          :vacation => {'2012' => %w(20120101)},
+          :holidays => {'2012' => %w(20120106)}
+        }
+      end
     end
 
     describe "exporting iCalendar" do
       before do
         couchdb.stub(:get).with('doc_id').and_return({
           '_id' => 'doc_id',
-          'vacation' => {'2011' => %w(20110101 20110102 20110104)}
+          'vacation' => {'2011' => %w(20110101 20110102 20110104), '2012' => %w(20120102)}
         })
       end
 
@@ -207,11 +219,13 @@ describe "Recharge" do
       it 'groups vacations in ranges' do
         get '/ics/doc_id'
         last_response.body.should =~ /^BEGIN:VCALENDAR/
-        last_response.body.scan(/BEGIN:VEVENT/).should have(2).items
+        last_response.body.scan(/BEGIN:VEVENT/).should have(3).items
         last_response.body.should =~
             /BEGIN:VEVENT.+DTEND:20110103.+DTSTART:20110101.+SUMMARY:Vacation.+END:VEVENT/m
         last_response.body.should =~
             /BEGIN:VEVENT.+DTEND:20110105.+DTSTART:20110104.+SUMMARY:Vacation.+END:VEVENT/m
+        last_response.body.should =~
+            /BEGIN:VEVENT.+DTEND:20120103.+DTSTART:20120102.+SUMMARY:Vacation.+END:VEVENT/m
       end
 
       it 'assigns a display name for the calendar' do

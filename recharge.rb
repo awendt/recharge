@@ -90,8 +90,8 @@ helpers do
   end
 
   def halt_on_empty_vacation
-    halt 406, "Please mark anything as your vacation!" \
-        if !params[:vacation] || params[:vacation].empty? || params[:vacation]['2011'].empty?
+    halt 406, "Please mark anything as your vacation!" if !params[:vacation] ||
+        params[:vacation].empty? || params[:vacation].values.all?{|v| v.empty?}
   end
 
   def csrf_token
@@ -171,15 +171,15 @@ end
 
 get '/cal/:calendar' do |cal|
   doc = DB.get(cal)
-  erb :index, :locals => default_params.merge(:vacation => doc['vacation']['2011'],
-      :holidays => doc['holidays']['2011'])
+  erb :index, :locals => default_params.merge(:vacation => doc['vacation'][Time.now.year.to_s],
+      :holidays => doc['holidays'][Time.now.year.to_s])
 end
 
 post '/cal/:calendar' do
   halt_on_empty_vacation
   doc = DB.get(params[:calendar])
-  doc['vacation']['2011'] = params[:vacation]['2011']
-  doc['holidays']['2011'] = params[:holidays]['2011']
+  doc['vacation'].merge!(params[:vacation])
+  doc['holidays'].merge!(params[:holidays])
   response = DB.save_doc(doc)
   content_type :json
   {:url => "/cal/#{response['id']}"}.to_json
@@ -189,11 +189,13 @@ get '/ics/:calendar' do
   doc = DB.get(params[:calendar])
   calendar = Icalendar::Calendar.new
   calendar.custom_property("X-WR-CALNAME", "Vacation")
-  ranges_from(doc['vacation']['2011']).each do |vacation|
-    calendar.event do
-      dtstart Date.parse(vacation.begin)
-      dtend Date.parse(vacation.last).succ
-      summary 'Vacation'
+  doc['vacation'].each_value do |by_year|
+    ranges_from(by_year).each do |vacation|
+      calendar.event do
+        dtstart Date.parse(vacation.begin)
+        dtend Date.parse(vacation.last).succ
+        summary 'Vacation'
+      end
     end
   end
   content_type :ics
