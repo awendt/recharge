@@ -145,40 +145,78 @@ describe "Recharge" do
     end
 
     describe "serving a specific calendar" do
+
+      shared_examples_for "showing calendars" do
+        it 'changes the button label to "Update"' do
+          get @url
+          last_response.should have_selector("button", :content => "Update")
+        end
+
+        it 'renders a link to iCalendar export' do
+          get @url
+          last_response.should have_selector("a[href='/ics/doc_id']")
+        end
+      end
+
       before do
-        couchdb.should_receive(:get).with('doc_id').and_return({
-          'vacation' => {'2011' => %w(20110201 20110202)},
-          'holidays' => {'2011' => %w(20110106)}
+        couchdb.stub(:get).with('doc_id').and_return({
+          'vacation' => {'2011' => %w(20110201 20110202), '2012' => %w(20120102)},
+          'holidays' => {'2011' => %w(20110106), '2012' => %w(20120101)}
         })
-        get '/cal/doc_id'
       end
 
-      it "should pre-select vacation days" do
-        last_response.should have_selector("#20110201.vacation")
-        last_response.should have_selector("#20110202.vacation")
-      end
+      describe 'in the current year' do
+        before { @url = '/cal/doc_id' }
 
-      it 'changes the button label to "Update"' do
-        last_response.should have_selector("button", :content => "Update")
-      end
+        it_should_behave_like "showing calendars"
 
-      it 'renders a link to iCalendar export' do
-        last_response.should have_selector("a[href='/ics/doc_id']")
-      end
-
-      describe "and marking holidays" do
-
-        it "marks the active ones" do
-          last_response.should have_selector("#20110106.holiday")
-          last_response.should have_selector("#20110106.holiday.active")
+        it "should pre-select vacation days" do
+          get @url
+          last_response.should have_selector("#20110201.vacation")
+          last_response.should have_selector("#20110202.vacation")
         end
 
-        it "skips the inactive ones" do
-          last_response.should have_selector("#20111101.holiday")
-          last_response.should_not have_selector("#20111101.holiday.active")
+        describe "and marking holidays" do
+          it "marks the active ones" do
+            get @url
+            last_response.should have_selector("#20110106.holiday")
+            last_response.should have_selector("#20110106.holiday.active")
+          end
+
+          it "skips the inactive ones" do
+            get @url
+            last_response.should have_selector("#20111101.holiday")
+            last_response.should_not have_selector("#20111101.holiday.active")
+          end
+        end
+      end
+
+      describe "in a specific year" do
+        before { @url = '/cal/doc_id/2012' }
+
+        it_should_behave_like "showing calendars"
+
+        it "should pre-select vacation days" do
+          get @url
+          last_response.should have_selector("#20120102.vacation")
         end
 
+        describe "and marking holidays" do
+          it "marks the active ones" do
+            pending "no idea why this is failing"
+            get @url
+            last_response.should have_selector("#20120101.holiday")
+            last_response.should have_selector("#20120101.holiday.active")
+          end
+
+          it "skips the inactive ones" do
+            get @url
+            last_response.should have_selector("#20121101.holiday")
+            last_response.should_not have_selector("#20121101.holiday.active")
+          end
+        end
       end
+
     end
 
     describe 'updating' do

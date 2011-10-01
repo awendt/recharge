@@ -73,12 +73,12 @@
           dataType: 'json',
           data: {
             vacation: {
-              2011: $.makeArray($(".vacation").map(function() {
+              <%= year %>: $.makeArray($(".vacation").map(function() {
                 return $(this).attr("id");
               }))
             },
             holidays: {
-              2011: $.makeArray($(".holiday.active").map(function() {
+              <%= year %>: $.makeArray($(".holiday.active").map(function() {
                 return $(this).attr("id");
               }))
             },

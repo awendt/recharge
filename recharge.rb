@@ -137,7 +137,7 @@ helpers do
     target_path = if request.env['PATH_INFO'] =~ %r(\/#{year}$)
       request.env['PATH_INFO'].gsub(%r(\/#{year}$), "/#{previous_year}")
     else
-      request.env['PATH_INFO'] + previous_year.to_s
+      request.env['PATH_INFO'] + "/#{previous_year}"
     end
     %Q(<a class="previous" href="#{target_path}">← #{previous_year}</a>)
   end
@@ -147,7 +147,7 @@ helpers do
     target_path = if request.env['PATH_INFO'] =~ %r(\/#{year}$)
       request.env['PATH_INFO'].gsub(%r(\/#{year}$), "/#{next_year}")
     else
-      request.env['PATH_INFO'] + next_year.to_s
+      request.env['PATH_INFO'] + "/#{next_year}"
     end
     %Q(<a class="next" href="#{target_path}">#{next_year} →</a>)
   end
@@ -165,17 +165,17 @@ helpers do
     ranges << Range.new(left,right)
   end
 
-  def default_params
-    {:vacation => [], :holidays => HOLIDAYS.keys.map(&:to_s), :year => Time.now.year}
+  def show_cal(vacation, holidays, year)
+    erb :index, :locals => {:vacation => vacation, :holidays => holidays, :year => year}
   end
 end
 
 get '/' do
-  erb :index, :locals => default_params
+  show_cal([], HOLIDAYS.keys.map(&:to_s), Time.now.year)
 end
 
 get '/:year' do |year|
-  erb :index, :locals => default_params.merge(:year => year.to_i)
+  show_cal([], HOLIDAYS.keys.map(&:to_s), year.to_i)
 end
 
 post '/' do
@@ -196,20 +196,23 @@ get '/favicon.ico' do
   not_found
 end
 
-get '/cal/:calendar' do |cal|
+get '/cal/:calendar/?:year?' do |cal, year|
   doc = DB.get(cal)
-  erb :index, :locals => default_params.merge(:vacation => doc['vacation'][Time.now.year.to_s],
-      :holidays => doc['holidays'][Time.now.year.to_s])
+  year ||= Time.now.year.to_s
+  show_cal(doc['vacation'][year] || [],
+      doc['holidays'][year] || HOLIDAYS.keys.map(&:to_s), year.to_i)
 end
 
-post '/cal/:calendar' do
+post '/cal/:calendar/?:year?' do
   halt_on_empty_vacation
   doc = DB.get(params[:calendar])
   doc['vacation'].merge!(params[:vacation])
   doc['holidays'].merge!(params[:holidays])
   response = DB.save_doc(doc)
   content_type :json
-  {:url => "/cal/#{response['id']}"}.to_json
+  url = "/cal/#{response['id']}"
+  url += "/#{year}" if params[:year]
+  {:url => url}.to_json
 end
 
 get '/ics/:calendar' do
