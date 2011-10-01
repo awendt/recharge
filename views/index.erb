@@ -97,6 +97,10 @@
   <div class="wrapper">
     <h1 id="logo">Recharge</h1>
     <%= calendar_for(year, vacation, holidays) %>
+    <div class="previous_next">
+      <%= link_to_previous_year(year) %>
+      <%= link_to_next_year(year) %>
+    </div>
   </div>
   <div id="elements">
     <div id="counter">

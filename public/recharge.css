@@ -135,3 +135,14 @@ button:disabled {
   text-shadow:1px 1px 0px rgba(255,255,255,0.5);
   background:rgba(220,220,220,1);
 }
+
+.next, .previous {
+  width:48%;
+  display:block;
+  float:left;
+  padding:10px;
+}
+
+.next {
+  text-align:right;
+}
