@@ -1,4 +1,7 @@
+require 'rubygems'
+require 'bundler/setup'
 require 'sinatra'
+require 'couchrest'
 require 'yaml'
 require 'rack/csrf'
 
