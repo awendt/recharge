@@ -137,22 +137,22 @@ helpers do
 
   def link_to_previous_year(year)
     previous_year = year - 1
-    target_path = if request.env['PATH_INFO'] =~ %r(\/#{year}$)
-      request.env['PATH_INFO'].gsub(%r(\/#{year}$), "/#{previous_year}")
+    target_path = if request.path_info =~ %r(\/#{year}$)
+      request.path_info.gsub(%r(\/#{year}$), "/#{previous_year}")
     else
-      request.env['PATH_INFO'] + "/#{previous_year}"
-    end
-    %Q(<a class="previous" href="#{target_path}">← #{previous_year}</a>)
+      request.path_info + "/#{previous_year}"
+    end.gsub(%r(//), '/')
+    %Q(<a id="previous" href="#{target_path}">← #{previous_year}</a>)
   end
 
   def link_to_next_year(year)
     next_year = year + 1
-    target_path = if request.env['PATH_INFO'] =~ %r(\/#{year}$)
-      request.env['PATH_INFO'].gsub(%r(\/#{year}$), "/#{next_year}")
+    target_path = if request.path_info =~ %r(\/#{year}$)
+      request.path_info.gsub(%r(\/#{year}$), "/#{next_year}")
     else
-      request.env['PATH_INFO'] + "/#{next_year}"
-    end
-    %Q(<a class="next" href="#{target_path}">#{next_year} →</a>)
+      request.path_info + "/#{next_year}"
+    end.gsub(%r(//), '/')
+    %Q(<a id="next" href="#{target_path}">#{next_year} →</a>)
   end
 
   def ranges_from(array)
