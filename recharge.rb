@@ -6,7 +6,6 @@ require 'yaml'
 require 'rack/csrf'
 
 configure do
-  DB = CouchRest.database("#{ENV['CLOUDANT_URL']}/recharge")
   calendar = YAML.load_file('holidays/de_DE.yml')['de_DE']
   HOLIDAYS = calendar.inject({}) do |result, event|
     result[Date.parse(event.first)] = event.last
@@ -14,11 +13,25 @@ configure do
   end
 end
 
-enable :sessions
-
 configure :production do
+  set :db, "#{ENV['CLOUDANT_URL']}/recharge"
   use Rack::Csrf, :raise => true
 end
+
+configure :test do
+  set :db, 'http://localhost:5984/recharge_test'
+end
+
+configure :cucumber do
+  set :db, 'http://localhost:5984/recharge_test'
+  use Rack::Csrf, :raise => true
+end
+
+configure :development do
+  set :db, 'http://localhost:5984/recharge_development'
+end
+
+enable :sessions
 
 set :views, './views'
 set :public, File.dirname(__FILE__) + '/public'
@@ -30,6 +43,10 @@ class Date
 end
 
 helpers do
+  def db
+    @db ||= CouchRest.database(settings.db)
+  end
+
   def calendar_for(year, vacation, active_holidays)
     first = Date.ordinal(year, 1)
     last = Date.ordinal(year, -1)
@@ -183,14 +200,14 @@ end
 
 post '/' do
   halt_on_empty_vacation
-  response = DB.save_doc(:vacation => params[:vacation], :holidays => params[:holidays])
+  response = db.save_doc(:vacation => params[:vacation], :holidays => params[:holidays])
   content_type :json
   {:url => "/cal/#{response['id']}"}.to_json
 end
 
 post '/:year' do |year|
   halt_on_empty_vacation
-  response = DB.save_doc(:vacation => params[:vacation], :holidays => params[:holidays])
+  response = db.save_doc(:vacation => params[:vacation], :holidays => params[:holidays])
   content_type :json
   {:url => "/cal/#{response['id']}"}.to_json
 end
@@ -200,7 +217,7 @@ get '/favicon.ico' do
 end
 
 get '/cal/:calendar/?:year?' do |cal, year|
-  doc = DB.get(cal)
+  doc = db.get(cal)
   year ||= Time.now.year.to_s
   show_cal(doc['vacation'][year] || [],
       doc['holidays'][year] || HOLIDAYS.keys.map(&:to_s), year.to_i)
@@ -208,10 +225,10 @@ end
 
 post '/cal/:calendar/?:year?' do
   halt_on_empty_vacation
-  doc = DB.get(params[:calendar])
+  doc = db.get(params[:calendar])
   doc['vacation'].merge!(params[:vacation])
   doc['holidays'].merge!(params[:holidays])
-  response = DB.save_doc(doc)
+  response = db.save_doc(doc)
   content_type :json
   url = "/cal/#{response['id']}"
   url += "/#{year}" if params[:year]
@@ -219,7 +236,7 @@ post '/cal/:calendar/?:year?' do
 end
 
 get '/ics/:calendar' do
-  doc = DB.get(params[:calendar])
+  doc = db.get(params[:calendar])
   calendar = Icalendar::Calendar.new
   calendar.custom_property("X-WR-CALNAME", "Vacation")
   doc['vacation'].each_value do |by_year|
