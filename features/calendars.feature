@@ -18,3 +18,47 @@ I want to see a calendar on the homepage
     And I follow previous year's link
     Then I should see a calendar for the previous year
     But I should not see vacation days
+
+@javascript
+  Scenario: Counting the days
+    When I go to the "2011" calendar
+    Then I should see a big fat "0" as vacation day count
+
+    When I select vacation from "20110110" to "20110114"
+    Then I should see a big fat "5" as vacation day count
+
+    When I de-select vacation from "20110113" to "20110114"
+    Then I should see a big fat "3" as vacation day count
+
+    When I press "Save"
+    Then I should see a big fat "3" as vacation day count
+
+@javascript
+  Scenario: Creating a calendar
+    When I go to the "2011" calendar
+    And I select vacation from "20110110" to "20110114"
+    And I press "Save"
+    Then I should see vacation days from "20110110" to "20110114"
+
+    When I follow next year's link
+    Then I should not see vacation days
+
+    When I follow previous year's link
+    Then I should see vacation days from "20110110" to "20110114"
+
+@javascript
+  Scenario: Updating an existing calendar
+    When I go to the "2011" calendar
+    And I select vacation from "20110110" to "20110114"
+    And I press "Save"
+    Then I should see vacation days from "20110110" to "20110114"
+
+    When I follow next year's link
+    Then I should not see vacation days
+
+    When I select vacation from "20120312" to "20120315"
+    And I press "Update"
+    Then I should see vacation days from "20120312" to "20120315"
+
+    When I follow previous year's link
+    Then I should see vacation days from "20110110" to "20110114"

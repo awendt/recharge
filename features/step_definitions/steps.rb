@@ -27,3 +27,35 @@ Then /^I should see a calendar for the (current|next|previous) year$/ do |relati
   page.all('.monday').should_not be_empty
   page.all('.friday').should_not be_empty
 end
+
+Then /^I should see a big fat "([^"]*)" as vacation day count$/ do |count|
+  page.find('#count').text.should == count
+end
+
+When /^I (de-)?select vacation from "([^"]*)" to "([^"]*)"$/ do |ignored, from, to|
+  (from..to).to_a.each do |id|
+    page.find("##{id}").click
+  end
+end
+
+When /^I (de-)?select vacation on "([^"]*)"$/ do |ignored, date|
+  page.find("##{date}").click
+end
+
+Then /^I should see vacation days from "([^"]*)" to "([^"]*)"$/ do |from, to|
+  days = (from..to).to_a
+  days.should have_at_least(1).item
+
+  page.should have_css('.vacation', :count => days.count)
+  days.each do |id|
+    page.should have_css("##{id}.vacation", :count => 1)
+  end
+end
+
+Then /^I should see "([^"]*)" active holidays$/ do |count|
+  page.all('.holiday.active').size.should == count.to_i
+end
+
+When /^I toggle holiday on "([^"]*)"$/ do |day|
+  page.execute_script(%Q!var e = $.Event("click"); e.shiftKey = true; $("##{day}").trigger(e);!)
+end
