@@ -14,6 +14,15 @@ class RechargeWorld
   include Capybara::DSL
   include RSpec::Expectations
   include RSpec::Matchers
+
+  def db
+    @db ||= CouchRest.database(settings.db)
+  end
+end
+
+Before do
+  db.delete!
+  db.create!
 end
 
 World do
