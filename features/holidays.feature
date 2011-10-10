@@ -26,3 +26,21 @@ I want holidays to be considered
 
     When I toggle holiday on "20110106"
     Then I should see a big fat "0" as vacation day count
+
+@javascript
+  Scenario: Saving holidays along with the vacation
+    When I go to the "2011" calendar
+    Then I should see "13" active holidays
+
+    When I toggle holiday on "20110106"
+    And I select vacation on "20110106"
+    And I press "Save"
+    Then I should see "12" active holidays
+
+    When I follow next year's link
+    Then I should not see vacation days
+    Then "20120106" should be an active holiday
+
+    When I follow previous year's link
+    Then I should see a vacation day on "20110106"
+    Then "20110106" should not be an active holiday
