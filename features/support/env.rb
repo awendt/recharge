@@ -21,7 +21,7 @@ class RechargeWorld
 end
 
 Before do
-  db.delete!
+  db.delete! rescue nil
   db.create!
 end
 
