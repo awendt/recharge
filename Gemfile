@@ -4,6 +4,10 @@ gem 'rack_csrf', :require => 'rack/csrf'
 gem 'couchrest'
 gem 'icalendar'
 
+group :development do
+  gem 'rake'
+end
+
 group :test do
   gem "rspec"
   gem "rack-test"
