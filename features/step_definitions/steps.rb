@@ -29,17 +29,17 @@ Then /^I should see a calendar for the (current|next|previous) year$/ do |relati
 end
 
 Then /^I should see a big fat "([^"]*)" as vacation day count$/ do |count|
-  page.find('#count').text.should == count
+  page.find_by_id('count').text.should == count
 end
 
 When /^I (de-)?select vacation from "([^"]*)" to "([^"]*)"$/ do |ignored, from, to|
   (from..to).to_a.each do |id|
-    page.find("##{id}").click
+    page.find_by_id(id).click
   end
 end
 
 When /^I (de-)?select vacation on "([^"]*)"$/ do |ignored, date|
-  page.find("##{date}").click
+  page.find_by_id(date).click
 end
 
 Then /^I should see vacation days from "([^"]*)" to "([^"]*)"$/ do |from, to|
