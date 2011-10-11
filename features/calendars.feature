@@ -47,6 +47,13 @@ I want to see a calendar on the homepage
     Then I should see vacation days from "20110110" to "20110114"
 
 @javascript
+  Scenario: Creating a calendar in a year other than the current redirects correctly
+    When I go to the "2010" calendar
+    And I select vacation from "20100301" to "20100305"
+    And I press "Save"
+    Then I should see vacation days from "20100301" to "20100305"
+
+@javascript
   Scenario: Updating an existing calendar
     When I go to the "2011" calendar
     And I select vacation from "20110110" to "20110114"

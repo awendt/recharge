@@ -16,6 +16,9 @@ module NavigationHelpers
     when /the "2011" calendar/
       '/2011'
 
+    when /the "2010" calendar/
+      '/2010'
+
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

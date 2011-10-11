@@ -48,7 +48,7 @@ Then /^I should see vacation days from "([^"]*)" to "([^"]*)"$/ do |from, to|
 
   page.should have_css('.vacation', :count => days.count)
   days.each do |id|
-    page.should have_css("##{id}.vacation", :count => 1)
+    page.find_by_id(id)['class'].split.should include('vacation')
   end
 end
 
