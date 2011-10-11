@@ -198,18 +198,13 @@ get '/:year' do |year|
   show_cal([], HOLIDAYS.keys.map(&:to_s), year.to_i)
 end
 
-post '/' do
+post '/:year?' do
   halt_on_empty_vacation
   response = db.save_doc(:vacation => params[:vacation], :holidays => params[:holidays])
   content_type :json
-  {:url => "/cal/#{response['id']}"}.to_json
-end
-
-post '/:year' do |year|
-  halt_on_empty_vacation
-  response = db.save_doc(:vacation => params[:vacation], :holidays => params[:holidays])
-  content_type :json
-  {:url => "/cal/#{response['id']}"}.to_json
+  url = "/cal/#{response['id']}"
+  url += "/#{params[:year]}" if params[:year]
+  {:url => url}.to_json
 end
 
 get '/favicon.ico' do
@@ -231,7 +226,7 @@ post '/cal/:calendar/?:year?' do
   response = db.save_doc(doc)
   content_type :json
   url = "/cal/#{response['id']}"
-  url += "/#{year}" if params[:year]
+  url += "/#{params[:year]}" if params[:year]
   {:url => url}.to_json
 end
 

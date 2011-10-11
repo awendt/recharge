@@ -42,8 +42,7 @@ describe "Recharge" do
           :vacation => {'2011' => %w(20110101 20110102 20110303)},
           :holidays => {'2011' => %w(20110106)}
         }
-        JSON.parse(last_response.body).should ==
-            {"url" => "/cal/some_id"}
+        JSON.parse(last_response.body)["url"].should =~ %r(^/cal/some_id)
       end
 
       it 'halts on documents without vacation' do
