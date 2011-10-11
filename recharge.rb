@@ -19,16 +19,16 @@ configure :production do
 end
 
 configure :test do
-  set :db, 'http://localhost:5984/recharge_test'
+  set :db, ENV['RECHARGE_TEST_DB'] || 'http://localhost:5984/recharge_test'
 end
 
 configure :cucumber do
-  set :db, 'http://localhost:5984/recharge_test'
+  set :db, ENV['RECHARGE_TEST_DB'] || 'http://localhost:5984/recharge_test'
   use Rack::Csrf, :raise => true
 end
 
 configure :development do
-  set :db, 'http://localhost:5984/recharge_development'
+  set :db, ENV['RECHARGE_DEV_DB'] || 'http://localhost:5984/recharge_development'
 end
 
 enable :sessions
