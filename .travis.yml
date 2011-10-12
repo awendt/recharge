@@ -2,6 +2,5 @@
 branches:
   only:
     - master
-    - cucumber
 before_script: "sh -e /etc/init.d/xvfb start"
 env: DISPLAY=:99.0
