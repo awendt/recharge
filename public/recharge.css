@@ -57,7 +57,7 @@ td {
   position:absolute;
   top:50px;
   left: 100px;
-  width:500px;
+  width:600px;
 }
 
 #counter {
@@ -76,6 +76,10 @@ td {
   padding:30px;
 }
 
+#save {
+  display:block;
+  margin-bottom:10px;
+}
 
 #actions {
   padding-top:80px;
@@ -101,48 +105,18 @@ table {
   border-collapse: collapse;
 }
 
-button {
-  font-size:1.2em;
-  -moz-border-radius:5px;
-  -webkit-border-radius:5px;
-  -moz-box-shadow:0px 0px 2px rgba(0,0,0,0.4);
-  -webkit-box-shadow:0px 0px 2px rgba(0,0,0,0.4);
-
-  color:rgba(0,0,0,0.9);
-  text-shadow:1px 1px 0px rgba(255,255,255,0.8);
-  border:1px solid rgba(0,0,0,0.5);
-
-  background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,1)), to(rgba(185,185,185,1)));
-  background:-moz-linear-gradient(top,rgba(255,255,255,1),rgba(185,185,185,1));
-
-  margin-bottom:10px;
-  padding:5px 20px 5px 20px;
-  display:block;
-}
-
-button:hover {
-  background:rgba(240,240,240,1);
-  cursor:pointer;
-}
-
-button:active, button:focus {
-  background:-webkit-gradient(linear, 0% 100%,0% 0%, from(rgba(255,255,255,1)), to(rgba(185,185,185,1)));
-  background:-moz-linear-gradient(bottom,rgba(255,255,255,1),rgba(185,185,185,1));
-}
-
-button:disabled {
-  color:rgba(0,0,0,0.4);
-  text-shadow:1px 1px 0px rgba(255,255,255,0.5);
-  background:rgba(220,220,220,1);
-}
-
 #next, #previous {
-  width:48%;
   display:block;
   float:left;
   padding:10px;
+  margin:0 20px;
 }
 
 #next {
   text-align:right;
+  float:right;
+}
+
+a.btn {
+  text-decoration:none;
 }

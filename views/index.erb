@@ -3,6 +3,7 @@
 <head>
   <meta charset=utf-8 />
   <title>Recharge</title>
+  <link rel="stylesheet" type="text/css" media="screen" href="/bootstrap.css" />
   <link rel="stylesheet" type="text/css" media="screen" href="/recharge.css" />
   <link rel="shortcut icon" href="/favicon.ico" />
   <script type="text/javascript" src="/jquery-1.4.4.min.js"></script>
@@ -107,7 +108,7 @@
       <div id="count"></div>
     </div>
     <div id="actions">
-      <button id="save"><%= button_label %></button>
+      <button id="save" class="btn large success"><%= button_label %></button>
       <%= link_to_icalendar_export %>
     </div>
   </div>

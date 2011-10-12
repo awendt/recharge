@@ -159,7 +159,7 @@ helpers do
     else
       request.path_info + "/#{previous_year}"
     end.gsub(%r(//), '/')
-    %Q(<a id="previous" href="#{target_path}">← #{previous_year}</a>)
+    %Q(<a id="previous" class="btn primary" href="#{target_path}">← #{previous_year}</a>)
   end
 
   def link_to_next_year(year)
@@ -169,7 +169,7 @@ helpers do
     else
       request.path_info + "/#{next_year}"
     end.gsub(%r(//), '/')
-    %Q(<a id="next" href="#{target_path}">#{next_year} →</a>)
+    %Q(<a id="next" class="btn primary" href="#{target_path}">#{next_year} →</a>)
   end
 
   def ranges_from(array)
