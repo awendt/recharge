@@ -1,21 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset=utf-8 />
+  <meta charset="utf-8">
   <title>Recharge</title>
-  <link rel="stylesheet" type="text/css" media="screen" href="/app.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/recharge.css" />
   <link rel="shortcut icon" href="/favicon.ico" />
   <script type="text/javascript" src="/jquery-1.4.4.min.js"></script>
   <script type="text/javascript" src="/jquery-ui-1.8.7.min.js"></script>
-  <script type="text/javascript" src="/raphael-min.js"></script>
   <script>
     $(function() {
-      var logo = Raphael("logo", 70, 30);
-      logo.rect("5","5","40","20","1").attr({"stroke-width": '2'});
-      logo.rect("45","11","4","8").attr({"stroke-width": '2'});
-      var fill = logo.rect("8", "8", "1", "14").attr({fill: '#000'});
-      fill.animate({width: '20'}, 1000);
-
       var mark_vacation = function(fn) {
         return function() {
           fn.apply(this, arguments);
@@ -94,15 +88,26 @@
   </script>
 </head>
 <body>
-  <div class="wrapper">
-    <h1 id="logo">Recharge</h1>
-    <%= calendar_for(year, vacation, holidays) %>
-    <div class="previous_next">
-      <%= link_to_previous_year(year) %>
-      <%= link_to_next_year(year) %>
+  <div class="container">
+    <div class="content">
+      <div class="page-header">
+        <h1>Recharge <small>— Counts your paid vacation days so you don't have to</small></h1>
+      </div>
+      <div class="row">
+        <div class="span16">
+          <%= calendar_for(year, vacation, holidays) %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span2">
+          <%= link_to_previous_year(year) %>
+        </div>
+        <div class="span2 offset12">
+          <%= link_to_next_year(year) %>
+        </div>
+      </div>
     </div>
-  </div>
-  <div id="elements">
+  <!-- <div id="elements">
     <div id="counter">
       <div id="count"></div>
     </div>
@@ -110,7 +115,9 @@
       <button id="save" class="btn large success"><%= button_label %></button>
       <%= link_to_icalendar_export %>
     </div>
-  </div>
+  </div> -->
+
+  </div> <!-- /container -->
   <a href="http://github.com/awendt/recharge"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://assets0.github.com/img/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf?repo=&url=http%3A%2F%2Fs3.amazonaws.com%2Fgithub%2Fribbons%2Fforkme_right_red_aa0000.png&path=" alt="Fork me on GitHub"></a>
 </body>
 </html>
