@@ -33,7 +33,7 @@ describe "Recharge" do
           :vacation => {'2011' => %w(20110101 20110102 20110303)},
           :holidays => {'2011' => %w(20110106)}
         }
-        last_response.headers["Content-Type"].should == "application/json"
+        last_response["Content-Type"].should == "application/json"
       end
 
       it "returns a redirect URL in JSON" do
@@ -50,6 +50,18 @@ describe "Recharge" do
         couchdb.should_not_receive(:save_doc)
         post @url, params.merge(:vacation => {'2011' => []})
         post @url, params.merge(:vacation => {'2011' => ""})
+      end
+    end
+
+    describe 'caching via HTTP' do
+      it 'should be supported through ETags' do
+        doc = CouchRest::Document.new
+        doc['vacation'] = doc['holidays'] = {}
+        doc['_rev'] = '15-xyz'
+        couchdb.stub(:get).with('doc_id').and_return(doc)
+
+        get '/cal/doc_id'
+        last_response['ETag'].should == '"15-xyz"'
       end
     end
 
@@ -130,7 +142,7 @@ describe "Recharge" do
 
       it "advertises the response as iCal format" do
         get '/ics/doc_id'
-        last_response.headers["Content-Type"].should =~ %r(text/calendar;)
+        last_response["Content-Type"].should =~ %r(text/calendar;)
       end
 
       it 'groups vacations in ranges' do

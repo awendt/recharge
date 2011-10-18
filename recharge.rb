@@ -213,6 +213,7 @@ end
 
 get '/cal/:calendar/?:year?' do |cal, year|
   doc = db.get(cal)
+  etag doc.rev
   year ||= Time.now.year.to_s
   show_cal(doc['vacation'][year] || [],
       doc['holidays'][year] || HOLIDAYS.keys.map(&:to_s), year.to_i)
