@@ -207,10 +207,6 @@ post '/:year?' do
   {:url => url}.to_json
 end
 
-get '/favicon.ico' do
-  not_found
-end
-
 get '/cal/:calendar/?:year?' do |cal, year|
   doc = db.get(cal)
   etag doc.rev
