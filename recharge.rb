@@ -4,14 +4,8 @@ require 'sinatra'
 require 'couchrest'
 require 'yaml'
 require 'rack/csrf'
-
-configure do
-  calendar = YAML.load_file('holidays/de_DE.yml')['de_DE']
-  HOLIDAYS = calendar.inject({}) do |result, event|
-    result[Date.parse(event.first)] = event.last
-    result
-  end
-end
+require 'holidays'
+require 'holidays/de'
 
 configure :production do
   set :db, "#{ENV['CLOUDANT_URL']}/recharge"
@@ -47,9 +41,19 @@ helpers do
     @db ||= CouchRest.database(settings.db)
   end
 
+  def holidays_in(year, region)
+    first_day = Date.ordinal(year, 1)
+    last_day = Date.ordinal(year, -1)
+    holidays = Holidays.between(first_day, last_day, region.to_sym).inject({}) do |result, holiday|
+      result[holiday[:date].to_s] = holiday[:name]
+      result
+    end
+  end
+
   def calendar_for(year, vacation, active_holidays)
     first = Date.ordinal(year, 1)
     last = Date.ordinal(year, -1)
+    holidays = holidays_in(year, :de)
     cal = [%(<table border="0" cellspacing="0" cellpadding="0">)]
     cal << %(<tbody>)
     first.upto(last) do |date|
@@ -61,12 +65,16 @@ helpers do
       css_classes = []
       css_classes << 'monday' if monday?(date)
       css_classes << 'friday' if friday?(date)
-      css_classes << 'holiday' if holiday?(date)
-      css_classes << 'active' if active_holidays.include?(date.to_s)
       css_classes << 'vacation' if vacation.include?(date.to_s)
-      title = holiday?(date) ? HOLIDAYS[date] : ""
+      if holidays.has_key?("#{date}")
+        css_classes << 'holiday'
+        title = holidays["#{date}"]
+      else
+        title = ""
+      end
+      css_classes << 'active' << 'holiday' if active_holidays.include?(date.to_s)
       cal << %(<td id="#{date}" class="#{css_classes.join(' ')}" title="#{title}">#{date.day}</td>)
-      cal << %(</tr>) if date == Date.new(date.year, date.month, -1)
+      cal << %(</tr>) if date.succ.month != date.month
     end
     cal << %(</tbody>)
     cal << %(</table>)
@@ -90,10 +98,6 @@ helpers do
     when 2 then "#{args[0]}#{"%02d" % args[1]}"
     else "#{args[0]}#{"%02d" % args[1]}#{"%02d" % args[2]}"
     end
-  end
-
-  def holiday?(date)
-    HOLIDAYS.keys.include?(date)
   end
 
   def month_name_for(month)
@@ -193,12 +197,12 @@ helpers do
   end
 end
 
-get '/' do
-  show_cal([], HOLIDAYS.keys.map(&:to_s), Time.now.year)
-end
-
-get '/:year' do |year|
-  show_cal([], HOLIDAYS.keys.map(&:to_s), year.to_i)
+get '/:year?' do
+  expires 300, :public, :must_revalidate
+  year = (params[:year] || Time.now.year).to_i
+  first = Date.ordinal(year, 1)
+  last = Date.ordinal(year, -1)
+  show_cal([], Holidays.between(first, last, :de).map{|h| h[:date].to_s}, year)
 end
 
 post '/:year?' do
@@ -214,8 +218,10 @@ get '/cal/:calendar/?:year?' do |cal, year|
   doc = db.get(cal)
   etag doc.rev
   year ||= Time.now.year.to_s
+  first = Date.ordinal(year.to_i, 1)
+  last = Date.ordinal(year.to_i, -1)
   show_cal(doc['vacation'][year] || [],
-      doc['holidays'][year] || HOLIDAYS.keys.map(&:to_s), year.to_i)
+      doc['holidays'][year] || Holidays.between(first, last, :de).map{|h| h[:date].to_s}, year.to_i)
 end
 
 post '/cal/:calendar/?:year?' do
@@ -245,4 +251,14 @@ get '/ics/:calendar' do
   end
   content_type :ics
   calendar.to_ical
+end
+
+get '/holidays/:region/:year' do |region, year|
+  begin
+    etag "#{region}-#{year}"
+    content_type :json
+    holidays_in(year.to_i, region).to_json
+  rescue Holidays::UnknownRegionError
+    not_found
+  end
 end

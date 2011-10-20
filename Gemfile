@@ -3,6 +3,7 @@ gem 'sinatra', '1.2'
 gem 'rack_csrf', :require => 'rack/csrf'
 gem 'couchrest'
 gem 'icalendar'
+gem 'holidays'
 
 group :development do
   gem 'rake'

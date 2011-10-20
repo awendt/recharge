@@ -3,13 +3,6 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe "Recharge" do
 
-  before do
-    YAML.stub!(:load_file).and_return({
-      "2011-01-06" => 'Heilige drei Könige',
-      "2011-11-01" => 'Allerheiligen'
-    })
-  end
-
   describe "Homepage and years" do
 
     it 'does not render a link to iCalendar export' do
@@ -17,9 +10,12 @@ describe "Recharge" do
       last_response.should_not have_selector("a[href*='/ics/']")
     end
 
-    it 'does not render a link to iCalendar export' do
-      get '/2012'
-      last_response.should_not have_selector("a[href*='/ics/']")
+    it 'includes a Cache-Control header in the response' do
+      get '/'
+      last_response['Cache-Control'].should =~ /public/
+      last_response['Cache-Control'].should =~ /must-revalidate/
+      last_response['Cache-Control'].should =~ /max-age=300/
+      last_response['Expires'].should_not be_empty
     end
   end
 
@@ -164,4 +160,33 @@ describe "Recharge" do
     end
 
   end
+
+  describe 'holidays' do
+    it "advertises the response as JSON" do
+      get '/holidays/de_by/2011'
+      last_response["Content-Type"].should == "application/json"
+    end
+
+    it "supports HTTP caching by sending an ETag" do
+      get '/holidays/de_by/2011'
+      last_response['ETag'].should == '"de_by-2011"'
+    end
+
+    it 'returns a hash of holidays in the given region' do
+      get '/holidays/de_by/2011'
+      JSON.parse(last_response.body).should be_a(Hash)
+      JSON.parse(last_response.body)['20110101'].should == 'Neujahrstag'
+    end
+
+    it 'returns 404 if no such region' do
+      get '/holidays/de_xx/2011'
+      last_response.status.should == 404
+    end
+
+    it 'returns 200 if no such year (to_i returns 0 for invalid numbers)' do
+      get '/holidays/de_by/xxx'
+      last_response.status.should == 200
+    end
+  end
+
 end

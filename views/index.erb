@@ -62,6 +62,20 @@
           $(this).toggleClass("vacation");
         }
       }));
+      $("#region").change(function() {
+        var region = $("#region option:selected").attr("name");
+        $.ajax({
+          url: "/holidays/"+region+"/<%= year %>",
+          dataType: 'json',
+          success: function(json) {
+            $(".holiday").removeClass("holiday active").removeAttr("title");
+            $.each(json, function(date, name) {
+              $("#"+date).addClass("holiday active").attr("title", name);
+            });
+            update_count();
+          }
+        });
+      });
       $("#save").click(function() {
         $.ajax({
           type: 'POST',
@@ -98,6 +112,30 @@
           <span class="weekday"><%= year %></span>
           <span id="count">9</span>
          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span16">
+          Trage deine Urlaubstage für <%= year %> durch Klicken ein.
+          <label for="region">Feiertage anzeigen für:</label>
+          <select id="region">
+            <option name="de_by">Bayern</option>
+            <option name="de_bw">Baden-Württemberg</option>
+            <option name="de" selected="selected">Berlin</option>
+            <option name="de_bb">Brandenburg</option>
+            <option name="de_he">Hessen</option>
+            <option name="de_nw">Nordrhein-Westfalen</option>
+            <option name="de_rp">Rheinland-Pfalz</option>
+            <option name="de_sl">Saarland</option>
+            <option name="de">Schleswig-Holstein</option>
+            <option name="de_th">Thüringen</option>
+            <option name="de_mv">Mecklenburg-Vorpommern</option>
+            <option name="de_sn">Sachsen</option>
+            <option name="de">Niedersachsen</option>
+            <option name="de">Hamburg</option>
+            <option name="de">Bremen</option>
+            <option name="de_st">Sachsen-Anhalt</option>
+          </select>
         </div>
       </div>
       <div class="row">

@@ -46,13 +46,15 @@ Then /^I should see vacation days from "([^"]*)" to "([^"]*)"$/ do |from, to|
   days = (from..to).to_a
   days.should have_at_least(1).item
 
-  page.should have_css('.vacation', :count => days.count)
+  page.should have_selector('.vacation')
+  page.all('.vacation').size.should == days.count
   days.each do |id|
     page.find_by_id(id)['class'].split.should include('vacation')
   end
 end
 
-Then /^I should see "([^"]*)" active holidays$/ do |count|
+Then /^I should see ([^"]*) active holidays$/ do |count|
+  page.should have_selector('.holiday.active')
   page.all('.holiday.active').size.should == count.to_i
 end
 
@@ -71,4 +73,8 @@ end
 Then /^"([^"]*)" should not be an active holiday$/ do |date|
   page.find_by_id(date)['class'].split.should include('holiday')
   page.find_by_id(date)['class'].split.should_not include('active')
+end
+
+When /^I switch to region "([^"]*)"$/ do |region|
+  select(region, :from => 'region')
 end
