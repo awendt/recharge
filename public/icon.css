@@ -1,0 +1,48 @@
+/*
+ * This awesome CSS code was taken from the article
+ * at http://usw-usf.de/featured/iphone-calendar-icon-mit-css3/
+ * by Henning Fries (twitter.com/kingfries)
+ *
+ * Used with permission.
+ */
+.calendar {
+ width: 85px;
+ height: 83px;
+ box-shadow: 0 0 4px rgba(0,0,0,0.4);
+ -moz-box-shadow: 0 4px 6px rgba(0,0,0,0.8);
+ -webkit-box-shadow: 0 4px 6px rgba(0,0,0,0.8);
+ background: rgba(238,238,238,1);
+ background : -webkit-gradient(linear, left top, left bottombottom, from(rgba(245,245,245,1)), to(rgba(228,228,228,1)));
+ background : -moz-linear-gradient(top, rgba(245,245,245,1), rgba(228,228,228,1));
+ color: #333;
+ text-align: center;
+ border: 1px solid #f3f3f3;
+ border-radius: 13px;
+ -moz-border-radius: 13px;
+ font-family: Arial, Helvetica, sans-serif;
+ font-weight: bold;
+ font-size: 59px;
+ line-height: 59px;
+ text-shadow: 1px -1px 0 rgba(212,212,212,0.8);
+}
+
+.weekday {
+ width: 87px;
+ height: 24px;
+ margin-left: -1px;
+ display: block;
+ color: #f6f6f6;
+ background: rgba(255,0,0,1);
+ background : -webkit-gradient(linear, left top, left bottom, from(rgba(228,167,167,1)), to(rgba(168,52,54,1)));
+ background : -moz-linear-gradient(top, rgba(228,167,167,1), rgba(168,52,54,1));
+ border-bottom: 3px solid #772524;
+ border-radius: 13px 13px 0 0;
+ -moz-border-radius: 13px 13px 0 0;
+ box-shadow: -1px 4px 8px rgba(0,0,0,0.3);
+ -moz-box-shadow: -1px 4px 8px rgba(0,0,0,0.3);
+ -webkit-box-shadow: -1px 4px 6px rgba(0,0,0,0.3);
+ font-size: 13px;
+ line-height: 23px;
+ text-shadow: -1px 0 rgba(0,0,0,0.5) , 0 -1px rgba(0,0,0,0.3),  0 1px rgba(255,255,255,0.5), -1px -1px rgba(0,0,0,0.3);
+ letter-spacing: 1px;
+}

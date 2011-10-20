@@ -75,6 +75,7 @@ table th, table td {
 table {
   border-collapse: collapse;
   border:none;
+  margin-top:10px;
 }
 
 table tr + tr td {
@@ -121,13 +122,6 @@ table th + th, table td + td {
   margin-right:30px;
 }
 
-#count {
-  font-size:6em;
-  width:125px;height:125px;
-  text-align:center;
-  padding:30px;
-}
-
 #save {
   display:block;
   margin-bottom:10px;
@@ -140,4 +134,8 @@ table th + th, table td + td {
 #next {
   text-align:right;
   float:right;
+}
+
+#ics {
+  padding-top: 5px;
 }

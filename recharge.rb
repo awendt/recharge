@@ -103,9 +103,9 @@ helpers do
   def button_label
     case request.fullpath
     when '/', %r(^/20[0-9]{2}$)
-      "Save"
+      "Keep this calendar"
     else
-      "Update"
+      "Update calendar"
     end
   end
 
@@ -148,8 +148,11 @@ helpers do
   def link_to_icalendar_export
     calendar_path = "/ics/#{params[:calendar]}"
     calendar_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}#{calendar_path}"
-    %Q!<span id="ics"><a href="#{calendar_path}">Calendar URL</a>#{clippy(calendar_url)}</span>! \
-        if request.fullpath =~ /^\/cal\//
+    if request.fullpath =~ /^\/cal\//
+      %Q!<div id="ics"><a href="#{calendar_path}">Calendar URL</a>#{clippy(calendar_url)}</div>!
+    else
+      '&nbsp;'
+    end
   end
 
   def link_to_previous_year(year)
