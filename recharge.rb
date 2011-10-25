@@ -107,9 +107,9 @@ helpers do
   def button_label
     case request.fullpath
     when '/', %r(^/20[0-9]{2}$)
-      "Keep this calendar"
+      "Kalender behalten"
     else
-      "Update calendar"
+      "Kalender aktualisieren"
     end
   end
 
@@ -153,7 +153,7 @@ helpers do
     calendar_path = "/ics/#{params[:calendar]}"
     calendar_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}#{calendar_path}"
     if request.fullpath =~ /^\/cal\//
-      %Q!<div id="ics"><a href="#{calendar_path}">Calendar URL</a>#{clippy(calendar_url)}</div>!
+      %Q!<div id="ics"><a href="#{calendar_path}" title="Mit dieser Adresse kann der Kalender abonniert werden">Kalenderadresse</a>#{clippy(calendar_url)}</div>!
     else
       '&nbsp;'
     end

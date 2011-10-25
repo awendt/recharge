@@ -34,7 +34,7 @@ I want holidays to be considered
 
     When I toggle holiday on "20111003"
     And I select vacation on "20111003"
-    And I press "Keep this calendar"
+    And I press "Kalender behalten"
     Then I should see 5 active holidays
 
     When I follow next year's link
@@ -75,7 +75,7 @@ I want holidays to be considered
     When I go to the "2011" calendar
     And I switch to region "Bayern"
     And I select vacation on "20110110"
-    And I press "Keep this calendar"
+    And I press "Kalender behalten"
 
     Then I should see 10 active holidays
     And "20110106" should be an active holiday
