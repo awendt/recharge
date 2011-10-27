@@ -29,7 +29,9 @@
           $("#save").attr('disabled', 'disabled');
         } else {
           $("#save").attr('disabled', '');
-          $(".calendar").addClass('flash');
+          if (count == 1) {
+            $(".calendar").addClass('flash');
+          }
         }
       };
       var dragging;
