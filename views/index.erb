@@ -29,6 +29,7 @@
           $("#save").attr('disabled', 'disabled');
         } else {
           $("#save").attr('disabled', '');
+          $(".calendar").addClass('flash');
         }
       };
       var dragging;
@@ -106,7 +107,7 @@
       <div class="page-header">
         <h1>Recharge <small>— zählt deine Urlaubstage, damit du es nicht machen musst!</small></h1>
         <div id="icon" class="offset12" style="position: absolute; top:3px;">
-         <div class="calendar">
+         <div class="calendar animated">
           <span class="weekday"><%= year %></span>
           <span id="count">9</span>
          </div>
