@@ -122,38 +122,18 @@ helpers do
     Rack::Csrf.csrf_token(env)
   end
 
-  def clippy(text, bgcolor='#FFFFFF')
-    html = <<-EOF
-      <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
-              width="110"
-              height="14"
-              id="clippy" >
-      <param name="movie" value="/clippy.swf"/>
-      <param name="allowScriptAccess" value="always" />
-      <param name="quality" value="high" />
-      <param name="scale" value="noscale" />
-      <param NAME="FlashVars" value="text=#{text}">
-      <param name="bgcolor" value="#{bgcolor}">
-      <embed src="/clippy.swf"
-             width="110"
-             height="14"
-             name="clippy"
-             quality="high"
-             allowScriptAccess="always"
-             type="application/x-shockwave-flash"
-             pluginspage="http://www.macromedia.com/go/getflashplayer"
-             FlashVars="text=#{text}"
-             bgcolor="#{bgcolor}"
-      />
-      </object>
-    EOF
+  def show_link_to_ical_export?
+    request.fullpath =~ /^\/cal\//
+  end
+
+  def calendar_url
+    calendar_path = "/ics/#{params[:calendar]}"
+    "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}#{calendar_path}"
   end
 
   def link_to_icalendar_export
-    calendar_path = "/ics/#{params[:calendar]}"
-    calendar_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}#{calendar_path}"
-    if request.fullpath =~ /^\/cal\//
-      %Q!<div id="ics"><a href="#{calendar_path}" title="Mit dieser Adresse kann der Kalender abonniert werden">Kalenderadresse</a>#{clippy(calendar_url)}</div>!
+    if show_link_to_ical_export?
+      %Q!<button id="copy" title="Mit dieser Adresse kann der Kalender abonniert werden" class="btn">Kalenderadresse kopieren</button>!
     else
       '&nbsp;'
     end

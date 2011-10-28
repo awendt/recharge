@@ -136,10 +136,6 @@ table th + th, table td + td {
   float:right;
 }
 
-#ics {
-  padding-top: 5px;
-}
-
 label {
   float:none;
 }
@@ -183,4 +179,10 @@ label {
   -ms-animation-name: flash;
   -o-animation-name: flash;
   animation-name: flash;
+}
+
+.btn.hover {
+  background-position: 0 -15px;
+  color: #333;
+  text-decoration: none;
 }

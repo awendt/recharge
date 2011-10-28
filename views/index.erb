@@ -7,8 +7,21 @@
   <link rel="shortcut icon" href="/favicon.ico" />
   <script type="text/javascript" src="/jquery-1.4.4.min.js"></script>
   <script type="text/javascript" src="/jquery-ui-1.8.7.min.js"></script>
+  <script type="text/javascript" src="/ZeroClipboard.js"></script>
   <script>
     $(function() {
+      var alert_ics_usage = function() {
+        alert("Mit der kopierten Adresse kannst du diesen Kalender jetzt in iCal, Outlook etc. abonnieren");
+      };
+
+      <% if show_link_to_ical_export? %>
+      ZeroClipboard.setMoviePath('/ZeroClipboard.swf');
+      var clip = new ZeroClipboard.Client();
+      clip.setText("<%= calendar_url %>");
+      clip.glue('copy');
+      clip.addEventListener('onComplete', alert_ics_usage);
+      <% end %>
+
       var mark_vacation = function(fn) {
         return function() {
           fn.apply(this, arguments);
