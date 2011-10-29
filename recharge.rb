@@ -133,7 +133,7 @@ helpers do
 
   def link_to_icalendar_export
     if show_link_to_ical_export?
-      %Q!<button id="copy" title="Mit dieser Adresse kann der Kalender abonniert werden" class="btn">Kalenderadresse kopieren</button>!
+      %Q!<button id="copy" class="btn" rel="popover" title="Kalender abonnieren" data-content="Mit dieser Adresse kann der Kalender in Programmen wie iCal, Outlook oder Sunbird abonniert werden.">Kalenderadresse kopieren</button>!
     else
       '&nbsp;'
     end
