@@ -187,9 +187,9 @@ end
 
 post '/:year?' do
   halt_on_empty_vacation
-  response = db.save_doc(:vacation => params[:vacation], :holidays => params[:holidays])
+  cal_doc = db.save_doc(:vacation => params[:vacation], :holidays => params[:holidays])
   content_type :json
-  url = "/cal/#{response['id']}"
+  url = "/cal/#{cal_doc['id']}"
   url += "/#{params[:year]}" if params[:year]
   {:url => url}.to_json
 end
@@ -209,9 +209,9 @@ post '/cal/:calendar/?:year?' do
   doc = db.get(params[:calendar])
   doc['vacation'].merge!(params[:vacation])
   doc['holidays'].merge!(params[:holidays])
-  response = db.save_doc(doc)
+  cal_doc = db.save_doc(doc)
   content_type :json
-  url = "/cal/#{response['id']}"
+  url = "/cal/#{cal_doc['id']}"
   url += "/#{params[:year]}" if params[:year]
   {:url => url}.to_json
 end
