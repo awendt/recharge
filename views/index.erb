@@ -7,10 +7,21 @@
   <link rel="shortcut icon" href="/favicon.ico" />
   <script type="text/javascript" src="/jquery-1.4.4.min.js"></script>
   <script type="text/javascript" src="/jquery-ui-1.8.7.min.js"></script>
+  <script type="text/javascript" src="/jquery.cookie.min.js"></script>
   <script type="text/javascript" src="/app.js"></script>
   <script>
     $(function() {
       $("[rel=popover]").popover({trigger: 'manual', placement: 'above', offset: 10});
+
+      var cookie_name = location.pathname.replace(/\//g, '_');
+      if ($.cookie(cookie_name)) {
+        $.cookie(cookie_name, null, {path: '/'});
+        $("[rel=popover-bookmark]").popover({trigger: 'manual', placement: 'below', offset: -60});
+        $("[rel=popover-bookmark]").popover('show');
+        $("body").click(function() {
+          $("[rel=popover-bookmark]").popover('hide');
+        })
+      }
 
       <% if show_link_to_ical_export? %>
       ZeroClipboard.setMoviePath('/ZeroClipboard.swf');
@@ -119,7 +130,7 @@
 <body>
   <div class="container">
     <div class="content">
-      <div class="page-header">
+      <div class="page-header" rel="popover-bookmark" title="Leg dir ein Lesezeichen an!" data-content="Unter dieser festen Adresse wird dein Kalender verfügbar bleiben. Leg dir am besten ein Lesezeichen an, damit du ihn wiederfindest.">
         <h1>Recharge <small>— zählt deine Urlaubstage, damit du es nicht machen musst!</small></h1>
         <div id="icon" class="offset12" style="position: absolute; top:3px;">
          <div class="calendar animated">

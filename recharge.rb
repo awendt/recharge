@@ -191,6 +191,7 @@ post '/:year?' do
   content_type :json
   url = "/cal/#{cal_doc['id']}"
   url += "/#{params[:year]}" if params[:year]
+  response.set_cookie(url.gsub(%r(/), '_'), 'show_bookmark_hint')
   {:url => url}.to_json
 end
 
