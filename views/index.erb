@@ -11,26 +11,32 @@
   <script type="text/javascript" src="/app.js"></script>
   <script>
     $(function() {
-      $("[rel=popover]").popover({trigger: 'manual', placement: 'above', offset: 10});
+      $("#copy").popover({trigger: 'manual', placement: 'above', offset: 10});
 
       var cookie_name = location.pathname.replace(/\//g, '_');
       if ($.cookie(cookie_name)) {
         $.cookie(cookie_name, null, {path: '/'});
-        $("[rel=popover-bookmark]").popover({trigger: 'manual', placement: 'below', offset: -60});
-        $("[rel=popover-bookmark]").popover('show');
-        $("body").click(function() {
-          $("[rel=popover-bookmark]").popover('hide');
-        })
+        $(".page-header")
+          .attr("rel", "popover")
+          .attr("title", "Leg dir ein Lesezeichen an!")
+          .attr("data-content", "Unter dieser festen Adresse wird dein Kalender verfügbar bleiben."
+              + "Leg dir am besten ein Lesezeichen an, damit du ihn wiederfindest.")
+          .popover({trigger: 'manual', placement: 'below', offset: -60})
+          .popover('show');
       }
+
+      $("body").click(function() {
+        $("[rel=popover]").each(function() { $(this).popover('hide') });
+      });
 
       <% if show_link_to_ical_export? %>
       ZeroClipboard.setMoviePath('/ZeroClipboard.swf');
       var clip = new ZeroClipboard.Client();
       clip.setText("<%= calendar_url %>");
       clip.glue('copy');
-      clip.addEventListener('onMouseOver', function() { $("[rel=popover]").popover('show'); });
-      clip.addEventListener('onMouseOut', function() { $("[rel=popover]").popover('hide'); });
-      clip.addEventListener('onComplete', function() { $("[rel=popover]").popover('hide'); });
+      clip.addEventListener('onMouseOver', function() { $("#copy").popover('show'); });
+      clip.addEventListener('onMouseOut', function() { $("#copy").popover('hide'); });
+      clip.addEventListener('onComplete', function() { $("#copy").popover('hide'); });
       <% end %>
 
       var mark_vacation = function(fn) {
@@ -120,6 +126,14 @@
           },
           success: function(data) {
             location.href = data.url;
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            $("#save")
+              .attr("rel", "popover")
+              .attr("title", "Speichern fehlgeschlagen")
+              .attr("data-content", "Da hat etwas nicht geklappt. Bitte versuch es später erneut.")
+              .popover({trigger: 'manual', placement: 'above', offset: 10})
+              .popover("show");
           }
         });
       });
@@ -130,7 +144,7 @@
 <body>
   <div class="container">
     <div class="content">
-      <div class="page-header" rel="popover-bookmark" title="Leg dir ein Lesezeichen an!" data-content="Unter dieser festen Adresse wird dein Kalender verfügbar bleiben. Leg dir am besten ein Lesezeichen an, damit du ihn wiederfindest.">
+      <div class="page-header">
         <h1>Recharge <small>— zählt deine Urlaubstage, damit du es nicht machen musst!</small></h1>
         <div id="icon" class="offset12" style="position: absolute; top:3px;">
          <div class="calendar animated">
