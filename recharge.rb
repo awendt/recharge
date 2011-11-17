@@ -28,7 +28,7 @@ end
 enable :sessions
 
 set :views, './views'
-set :public, File.dirname(__FILE__) + '/public'
+set :public_folder, File.dirname(__FILE__) + '/public'
 
 class Date
   def to_s

@@ -29,7 +29,7 @@ describe "Recharge" do
           :vacation => {'2011' => %w(20110101 20110102 20110303)},
           :holidays => {'2011' => %w(20110106)}
         }
-        last_response["Content-Type"].should == "application/json"
+        last_response["Content-Type"].should =~ %r(application/json)
       end
 
       it "returns a redirect URL in JSON" do
@@ -164,7 +164,7 @@ describe "Recharge" do
   describe 'holidays' do
     it "advertises the response as JSON" do
       get '/holidays/de_by/2011'
-      last_response["Content-Type"].should == "application/json"
+      last_response["Content-Type"].should =~ %r(application/json)
     end
 
     it "supports HTTP caching by sending an ETag" do

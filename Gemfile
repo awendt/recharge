@@ -1,5 +1,5 @@
 source :gemcutter
-gem 'sinatra', '1.2'
+gem 'sinatra'
 gem 'rack_csrf', :require => 'rack/csrf'
 gem 'couchrest'
 gem 'icalendar'
