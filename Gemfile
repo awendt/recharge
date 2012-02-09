@@ -4,6 +4,7 @@ gem 'rack_csrf', :require => 'rack/csrf'
 gem 'couchrest'
 gem 'icalendar'
 gem 'holidays'
+gem 'newrelic_rpm'
 
 group :development do
   gem 'rake'

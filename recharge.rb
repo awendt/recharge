@@ -10,6 +10,7 @@ require 'holidays/de'
 configure :production do
   set :db, "#{ENV['CLOUDANT_URL']}/recharge"
   use Rack::Csrf, :raise => true
+  require 'newrelic_rpm'
 end
 
 configure :test do
