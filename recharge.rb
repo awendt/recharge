@@ -58,24 +58,26 @@ helpers do
     cal = [%(<table border="0" cellspacing="0" cellpadding="0">)]
     cal << %(<tbody>)
     first.upto(last) do |date|
+      month = date.month
+      timestamp = date.to_s
       if date.day == 1
-        cal << %(<tr id="#{date.year}#{'%02d' % date.mon}">)
-        cal << %(<th>#{month_name_for(date.mon)}</th>)
+        cal << %(<tr id="#{date.year}#{'%02d' % month}">)
+        cal << %(<th>#{month_name_for(month)}</th>)
       end
       next if weekend?(date)
       css_classes = []
       css_classes << 'monday' if monday?(date)
       css_classes << 'friday' if friday?(date)
-      css_classes << 'vacation' if vacation.include?(date.to_s)
-      if holidays.has_key?("#{date}")
+      css_classes << 'vacation' if vacation.include?(timestamp)
+      if holidays.has_key?(timestamp)
         css_classes << 'holiday'
-        title = holidays["#{date}"]
+        title = holidays[timestamp]
       else
         title = ""
       end
-      css_classes << 'active' << 'holiday' if active_holidays.include?(date.to_s)
-      cal << %(<td id="#{date}" class="#{css_classes.join(' ')}" title="#{title}">#{date.day}</td>)
-      cal << %(</tr>) if date.succ.month != date.month
+      css_classes << 'active' << 'holiday' if active_holidays.include?(timestamp)
+      cal << %(<td id="#{timestamp}" class="#{css_classes.join(' ')}" title="#{title}">#{date.day}</td>)
+      cal << %(</tr>) if date.succ.month != month
     end
     cal << %(</tbody>)
     cal << %(</table>)
