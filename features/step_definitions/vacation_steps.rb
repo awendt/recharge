@@ -20,8 +20,7 @@ Then /^I should see vacation days from "([^"]*)" to "([^"]*)"$/ do |from, to|
   days = (from..to).to_a
   days.should have_at_least(1).item
 
-  page.should have_selector('.vacation')
-  page.all('.vacation').size.should == days.count
+  page.should have_selector('.vacation', :count => days.count)
   days.each do |id|
     page.find_by_id(id)['class'].split.should include('vacation')
   end

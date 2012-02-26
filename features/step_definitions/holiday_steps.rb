@@ -1,6 +1,5 @@
 Then /^I should see ([^"]*) active holidays$/ do |count|
-  page.should have_selector('.holiday.active')
-  page.all('.holiday.active').size.should == count.to_i
+  page.should have_selector('.holiday.active', :count => count.to_i)
 end
 
 When /^I toggle holiday on "([^"]*)"$/ do |day|
