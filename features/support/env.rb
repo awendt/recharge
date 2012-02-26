@@ -9,6 +9,7 @@ require 'capybara/cucumber'
 require 'rspec'
 
 Capybara.app = Sinatra::Application
+Capybara.default_wait_time = 5
 
 class RechargeWorld
   include Capybara::DSL
