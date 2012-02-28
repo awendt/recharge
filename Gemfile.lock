@@ -23,6 +23,7 @@ GEM
       term-ansicolor (>= 1.0.6)
     cucumber-sinatra (0.4.0)
       templater (>= 1.0.0)
+    dalli (1.1.4)
     diff-lcs (1.1.3)
     extlib (0.9.15)
     ffi (1.0.11)
@@ -85,6 +86,7 @@ DEPENDENCIES
   couchrest
   cucumber
   cucumber-sinatra
+  dalli
   holidays
   icalendar
   newrelic_rpm

@@ -6,6 +6,7 @@ require 'yaml'
 require 'rack/csrf'
 require 'holidays'
 require 'holidays/de'
+require './cache'
 
 configure :production do
   set :db, "#{ENV['CLOUDANT_URL']}/recharge"
@@ -178,6 +179,10 @@ helpers do
   def show_cal(vacation, holidays, year)
     erb :index, :locals => {:vacation => vacation, :holidays => holidays, :year => year}
   end
+
+  def page(year, &block)
+    erb :index, :locals => {:year => year, :calendar_partial => block.call}
+  end
 end
 
 get '/:year?' do
@@ -185,7 +190,10 @@ get '/:year?' do
   year = (params[:year] || Time.now.year).to_i
   first = Date.ordinal(year, 1)
   last = Date.ordinal(year, -1)
-  show_cal([], Holidays.between(first, last, :de).map{|h| h[:date].to_s}, year)
+  key = "#{ENV['COMMIT_HASH']}-#{year}"
+  page(year) do
+    cache(key) { calendar_for(year, [], Holidays.between(first, last, :de).map{|h| h[:date].to_s}) }
+  end
 end
 
 post '/:year?' do
@@ -204,8 +212,10 @@ get '/cal/:calendar/?:year?' do |cal, year|
   year ||= Time.now.year.to_s
   first = Date.ordinal(year.to_i, 1)
   last = Date.ordinal(year.to_i, -1)
-  show_cal(doc['vacation'][year] || [],
-      doc['holidays'][year] || Holidays.between(first, last, :de).map{|h| h[:date].to_s}, year.to_i)
+  page(year.to_i) do
+    calendar_for(year.to_i, doc['vacation'][year] || [],
+        doc['holidays'][year] || Holidays.between(first, last, :de).map{|h| h[:date].to_s})
+  end
 end
 
 post '/cal/:calendar/?:year?' do

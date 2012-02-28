@@ -3,6 +3,11 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe "Recharge" do
 
+  before do
+    app.cache.stub(:get)
+    app.cache.stub(:set)
+  end
+
   describe "Homepage and years" do
 
     it 'does not render a link to iCalendar export' do
@@ -187,6 +192,24 @@ describe "Recharge" do
       get '/holidays/de_by/xxx'
       last_response.status.should == 200
     end
+  end
+
+  describe 'caching fragments' do
+    it 'should have a Dalli client injected into the app' do
+      app.cache.should be_kind_of(Dalli::Client)
+    end
+
+    it 'should be done on the first request' do
+      app.cache.should_receive(:set).with(/-2012/, /^\<table/i).once
+      get '/2012'
+    end
+
+    it 'should be used for calendar output' do
+      app.cache.should_receive(:get).with(/-2012/).and_return('some_cached_fragment')
+      get '/2012'
+      last_response.body.should include('some_cached_fragment')
+    end
+
   end
 
 end

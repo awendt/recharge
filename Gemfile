@@ -5,6 +5,7 @@ gem 'couchrest'
 gem 'icalendar'
 gem 'holidays'
 gem 'newrelic_rpm'
+gem 'dalli'
 
 group :development do
   gem 'rake'
