@@ -3,5 +3,5 @@ require 'bundler'
 
 Bundler.require
 
-require 'recharge'
+require './recharge'
 run Sinatra::Application
