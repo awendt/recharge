@@ -28,6 +28,7 @@ configure :development do
 end
 
 enable :sessions
+set :session_secret, ENV['SESSION_KEY']
 
 set :views, './views'
 set :public_folder, File.dirname(__FILE__) + '/public'
