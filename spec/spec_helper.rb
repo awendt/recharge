@@ -3,7 +3,7 @@ require 'bundler'
 
 Bundler.require(:default, :test)
 
-require 'recharge'
+require File.expand_path('../../recharge', __FILE__)
 
 set :environment, :test
 
