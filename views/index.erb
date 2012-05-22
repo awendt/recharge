@@ -119,6 +119,7 @@
         });
       });
       $("#save").click(function() {
+        $(this).attr('disabled', 'disabled').text('Speichern...');
         $.ajax({
           type: 'POST',
           dataType: 'json',
