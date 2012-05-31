@@ -7,6 +7,11 @@ gem 'holidays'
 gem 'newrelic_rpm'
 gem 'thin'
 
+gem 'sprockets'
+gem 'yui-compressor', :require => 'yui/compressor'
+gem 'uglifier'
+gem 'therubyracer'
+
 group :development do
   gem 'rake'
 end
