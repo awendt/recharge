@@ -33,6 +33,8 @@ set :session_secret, ENV['SESSION_KEY']
 set :views, './views'
 set :public_folder, File.dirname(__FILE__) + '/public'
 
+use Rack::Deflater
+
 class Date
   def to_s
     strftime('%Y%m%d')

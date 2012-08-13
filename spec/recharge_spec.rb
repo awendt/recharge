@@ -3,6 +3,11 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe "Recharge" do
 
+  it 'gzips responses' do
+    get '/', {}, {'HTTP_ACCEPT_ENCODING' => 'gzip'}
+    last_response.headers['Content-Encoding'].should =~ /gzip/
+  end
+
   describe "Homepage and years" do
 
     it 'does not render a link to iCalendar export' do
