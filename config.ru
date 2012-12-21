@@ -11,6 +11,7 @@ map '/assets' do
   environment.append_path 'assets/stylesheets'
   environment.js_compressor = Uglifier.new(:copyright => false)
   environment.css_compressor = YUI::CssCompressor.new
+  use Rack::Deflater
   run environment
 end
 
