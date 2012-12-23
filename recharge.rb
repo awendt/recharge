@@ -140,7 +140,7 @@ helpers do
 
   def link_to_icalendar_export
     if show_link_to_ical_export?
-      %Q!<button id="copy" class="btn" rel="popover" title="Diesen Kalender abonnieren" data-content="Mit dieser Adresse kann der Kalender in Programmen wie iCal, Outlook oder Sunbird abonniert werden.">Kalenderadresse kopieren</button>!
+      %Q!<button id="copy" class="btn" rel="popover" data-title="Diesen Kalender abonnieren" data-content="Mit dieser Adresse kann der Kalender in Programmen wie iCal, Outlook oder Sunbird abonniert werden."><i class="icon-calendar"></i> Kalenderadresse kopieren</button>!
     else
       '&nbsp;'
     end
@@ -153,7 +153,7 @@ helpers do
     else
       request.path_info + "/#{previous_year}"
     end.gsub(%r(//), '/')
-    %Q(<a id="previous" class="btn primary" href="#{target_path}">← #{previous_year}</a>)
+    %Q(<a id="previous" class="btn btn-primary" href="#{target_path}">← #{previous_year}</a>)
   end
 
   def link_to_next_year(year)
@@ -163,7 +163,7 @@ helpers do
     else
       request.path_info + "/#{next_year}"
     end.gsub(%r(//), '/')
-    %Q(<a id="next" class="btn primary" href="#{target_path}">#{next_year} →</a>)
+    %Q(<a id="next" class="btn btn-primary" href="#{target_path}">#{next_year} →</a>)
   end
 
   def ranges_from(array)

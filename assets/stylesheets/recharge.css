@@ -2,6 +2,21 @@
 html, body {
   background:url(/background.jpg) repeat-y center;
 }
+
+h1 {
+  padding-top:0;
+  margin-top:0;
+  font-size: 30px;
+}
+
+h1 small {
+  font-size: 18px;
+}
+
+#icon {
+ margin-top:5px;
+}
+
 .container > footer p {
   text-align: center; /* center align it with the container */
 }
@@ -32,7 +47,7 @@ html, body {
 
 td {
   text-align:center !important;
-  padding: 5px 8px;
+  padding: 8px;
   margin:0;
   cursor: default;
   width:20px;
@@ -69,6 +84,7 @@ table {
   border-collapse: collapse;
   border:none;
   margin-top:10px;
+  margin-bottom:18px;
 }
 
 table tr + tr td {

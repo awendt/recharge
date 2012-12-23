@@ -8,29 +8,30 @@
   <script type="text/javascript" src="/assets/app.js"></script>
   <script>
     $(function() {
-      $("#copy").popover({trigger: 'manual', placement: 'above', offset: 10});
+      $("#copy").popover({trigger: 'manual', placement: 'top'});
 
       var cookie_name = location.pathname.replace(/\//g, '_');
       if ($.cookie(cookie_name)) {
         $.cookie(cookie_name, null, {path: '/'});
-        $(".page-header")
+        $(".page-header h1")
           .attr("rel", "popover")
           .attr("title", "Leg dir ein Lesezeichen an!")
           .attr("data-content", "Unter dieser festen Adresse wird dein Kalender verfügbar bleiben."
               + "Leg dir am besten ein Lesezeichen an, damit du ihn wiederfindest.")
-          .popover({trigger: 'manual', placement: 'below', offset: -60})
+          .popover({trigger: 'manual', placement: 'bottom'})
           .popover('show');
       }
 
       if (window.location.hash === '#moved') {
         window.location.hash = "";
         history.pushState('', document.title, window.location.pathname);
-        $(".page-header")
+        $(".page-header h1")
           .attr("rel", "popover")
           .attr("title", "Wir sind umgezogen")
-          .attr("data-content", "Dein Urlaubskalender hat eine neue Heimat bei recharge.wendtswelt.de gefunden."
+          .attr("data-content",
+              "Dein Urlaubskalender hat eine neue Heimat bei recharge.wendtswelt.de gefunden."
               + " Bitte denk dran, deine Lesezeichen zu aktualisieren.")
-          .popover({trigger: 'manual', placement: 'below', offset: -60})
+          .popover({trigger: 'manual', placement: 'bottom'})
           .popover('show');
       }
 
@@ -142,7 +143,7 @@
               .attr("rel", "popover")
               .attr("title", "Speichern fehlgeschlagen")
               .attr("data-content", "Da hat etwas nicht geklappt. Bitte versuch es später erneut.")
-              .popover({trigger: 'manual', placement: 'above', offset: 10})
+              .popover({trigger: 'manual', placement: 'top'})
               .popover("show");
           }
         });
@@ -156,7 +157,7 @@
     <div class="content">
       <div class="page-header">
         <h1>Recharge <small>— zählt deine Urlaubstage, damit du es nicht machen musst!</small></h1>
-        <div id="icon" class="offset12" style="position: absolute; top:3px;">
+        <div id="icon" class="offset9" style="position: absolute; top:3px;">
          <div class="calendar animated">
           <span class="weekday"><%= year %></span>
           <span id="count">9</span>
@@ -164,8 +165,8 @@
         </div>
       </div>
       <div class="row">
-        <div class="span16">
-          <span class="label success">Los geht's:</span>
+        <div class="span12 form-inline">
+          <span class="label label-success">Los geht's:</span>
           Klick deine Urlaubstage für <%= year %> einfach an.
           <label for="region">Feiertage anzeigen für:</label>
           <select id="region">
@@ -189,7 +190,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="span16">
+        <div class="span12">
           <%= calendar_for(year, vacation, holidays) %>
         </div>
       </div>
@@ -197,18 +198,18 @@
         <div class="span2">
           <%= link_to_previous_year(year) %>
         </div>
-        <div class="span3 offset4">
-          <button id="save" class="btn success"><%= button_label %></button>
+        <div class="span3 offset1">
+          <button id="save" class="btn btn-success"><%= button_label %></button>
         </div>
         <div class="span4">
           <%= link_to_icalendar_export %>
         </div>
-        <div class="span2 offset1">
+        <div class="span2">
           <%= link_to_next_year(year) %>
         </div>
       </div>
       <div class="row">
-        <div class="span15 offset1">
+        <div class="span12 offset1">
           Recharge von <a href="http://twitter.com/awendt">André</a> &#183;
           Kalender-Icon in CSS von <a href="http://usw-usf.de/featured/iphone-calendar-icon-mit-css3/">Henning</a>
         </div>
