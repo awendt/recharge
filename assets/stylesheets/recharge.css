@@ -103,6 +103,10 @@ table th + th, table td + td {
   background-color:#FCA44B;
 }
 
+.vacation.half {
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.5) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0.5) 75%, transparent 75%, transparent);
+}
+
 .holiday.active {
   background-color:#CDE8D5;
 }

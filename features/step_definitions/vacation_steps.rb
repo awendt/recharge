@@ -29,3 +29,12 @@ end
 Then /^I should see a vacation day on "([^"]*)"$/ do |date|
   page.find_by_id(date)['class'].split.should include('vacation')
 end
+
+When /^I mark vacation days on "([^"]*)" and "([^"]*)" as half$/ do |day1, day2|
+  page.find_by_id("halfdays").click
+  wait_until do
+    page.evaluate_script('$(":animated").length') == 0
+  end
+  page.find_by_id(day1).click
+  page.find_by_id(day2).click
+end

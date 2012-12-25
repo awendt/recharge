@@ -2,5 +2,6 @@
 //= require jquery-ui-1.9.2.min
 //= require jquery.cookie
 //= require ZeroClipboard
+//= require jquery.tools.min
 //= require bootstrap-tooltip
 //= require bootstrap-popover

@@ -82,3 +82,11 @@ I want to see a calendar on the homepage
 
     When I press "Kalender aktualisieren"
     Then I should not see a popover
+
+@javascript
+  Scenario: Marking days as half days
+    When I go to the "2012" calendar
+    And I select vacation from "20120116" to "20120120"
+    Then I should see a big fat "5" as vacation day count
+    When I mark vacation days on "20120116" and "20120117" as half
+    Then I should see a big fat "4" as vacation day count

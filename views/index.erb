@@ -8,7 +8,19 @@
   <script type="text/javascript" src="/assets/app.js"></script>
   <script>
     $(function() {
+      var toggle_vacation_class = "vacation";
       $("#copy").popover({trigger: 'manual', placement: 'top'});
+
+      $("#halfdays").click(function() {
+        $(".vacation, #save").expose({
+          onLoad: function() {
+            toggle_vacation_class = "half";
+          },
+          onClose: function() {
+            toggle_vacation_class = "vacation";
+          }
+        });
+      });
 
       var cookie_name = location.pathname.replace(/\//g, '_');
       if ($.cookie(cookie_name)) {
@@ -63,7 +75,8 @@
         }
       };
       var update_count = function() {
-        var count = $(".vacation,.vacation_drag").not(".holiday.active").length;
+        var count = $(".vacation,.vacation_drag").not(".holiday.active").length -
+            $(".vacation.half").not(".holiday.active").length/2;
         $("#count").text(count);
         if (count == 0) {
           $("#save").attr('disabled', 'disabled');
@@ -100,7 +113,7 @@
         if (e.shiftKey && $(this).hasClass("holiday")) {
           $(this).toggleClass("active");
         } else {
-          $(this).toggleClass("vacation");
+          $(this).toggleClass(toggle_vacation_class);
         }
       }));
       $("#region").change(function() {
@@ -168,8 +181,10 @@
         <div class="span12 form-inline">
           <span class="label label-success">Los geht's:</span>
           Klick deine Urlaubstage für <%= year %> einfach an.
+          <span class="label label-important">Neu:</span>
+          <button class="btn btn-link" id="halfdays">Halbe Tage.</button>
           <label for="region">Feiertage anzeigen für:</label>
-          <select id="region">
+          <select id="region" class="medium">
             <option name="de_by">Bayern</option>
             <option name="de_bw">Baden-Württemberg</option>
             <option name="de" selected="selected">Berlin</option>
