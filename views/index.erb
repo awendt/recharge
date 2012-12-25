@@ -141,6 +141,11 @@
                 return $(this).attr("id");
               }))
             },
+            half: {
+              <%= year %>: $.makeArray($(".vacation.half").map(function() {
+                return $(this).attr("id");
+              }))
+            },
             holidays: {
               <%= year %>: $.makeArray($(".holiday.active").map(function() {
                 return $(this).attr("id");
@@ -206,7 +211,7 @@
       </div>
       <div class="row">
         <div class="span12">
-          <%= calendar_for(year, vacation, holidays) %>
+          <%= calendar_for(year, vacation, half, holidays) %>
         </div>
       </div>
       <div class="row">

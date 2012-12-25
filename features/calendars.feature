@@ -30,14 +30,14 @@ I want to see a calendar on the homepage
     When I de-select vacation from "20110113" to "20110114"
     Then I should see a big fat "3" as vacation day count
 
-    When I press "Kalender behalten"
+    When I save the calendar
     Then I should see a big fat "3" as vacation day count
 
 @javascript
   Scenario: Creating a calendar
     When I go to the "2011" calendar
     And I select vacation from "20110110" to "20110114"
-    And I press "Kalender behalten"
+    And I save the calendar
     Then I should see vacation days from "20110110" to "20110114"
 
     When I follow next year's link
@@ -50,21 +50,21 @@ I want to see a calendar on the homepage
   Scenario: Creating a calendar in a year other than the current redirects correctly
     When I go to the "2010" calendar
     And I select vacation from "20100301" to "20100305"
-    And I press "Kalender behalten"
+    And I save the calendar
     Then I should see vacation days from "20100301" to "20100305"
 
 @javascript
   Scenario: Updating an existing calendar
     When I go to the "2011" calendar
     And I select vacation from "20110110" to "20110114"
-    And I press "Kalender behalten"
+    And I save the calendar
     Then I should see vacation days from "20110110" to "20110114"
 
     When I follow next year's link
     Then I should not see vacation days
 
     When I select vacation from "20120312" to "20120315"
-    And I press "Kalender aktualisieren"
+    And I save the calendar
     Then I should see vacation days from "20120312" to "20120315"
 
     When I follow previous year's link
@@ -75,12 +75,12 @@ I want to see a calendar on the homepage
     When I go to the "2011" calendar
     Then I should not see a popover
     And I select vacation from "20110110" to "20110114"
-    And I press "Kalender behalten"
+    And I save the calendar
     Then I should see "Lesezeichen" in a popover
     When I select vacation from "20110117" to "20110118"
     Then I should not see a popover
 
-    When I press "Kalender aktualisieren"
+    When I save the calendar
     Then I should not see a popover
 
 @javascript
@@ -89,4 +89,7 @@ I want to see a calendar on the homepage
     And I select vacation from "20120116" to "20120120"
     Then I should see a big fat "5" as vacation day count
     When I mark vacation days on "20120116" and "20120117" as half
+    Then I should see a big fat "4" as vacation day count
+
+    When I save the calendar
     Then I should see a big fat "4" as vacation day count

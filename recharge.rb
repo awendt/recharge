@@ -55,7 +55,7 @@ helpers do
     end
   end
 
-  def calendar_for(year, vacation, active_holidays)
+  def calendar_for(year, vacation, half, active_holidays)
     first = Date.ordinal(year, 1)
     last = Date.ordinal(year, -1)
     holidays = holidays_in(year, :de)
@@ -72,7 +72,10 @@ helpers do
       css_classes = []
       css_classes << 'monday' if monday?(date)
       css_classes << 'friday' if friday?(date)
-      css_classes << 'vacation' if vacation.include?(timestamp)
+      if vacation.include?(timestamp)
+        css_classes << 'vacation'
+        css_classes << 'half' if half.include?(timestamp)
+      end
       if holidays.has_key?(timestamp)
         css_classes << 'holiday'
         title = holidays[timestamp]
@@ -179,8 +182,8 @@ helpers do
     ranges << Range.new(left,right)
   end
 
-  def show_cal(vacation, holidays, year)
-    erb :index, :locals => {:vacation => vacation, :holidays => holidays, :year => year}
+  def show_cal(vacation, half, holidays, year)
+    erb :index, :locals => {vacation: vacation, half: half, holidays: holidays, year: year}
   end
 end
 
@@ -189,12 +192,12 @@ get '/:year?' do
   year = (params[:year] || Time.now.year).to_i
   first = Date.ordinal(year, 1)
   last = Date.ordinal(year, -1)
-  show_cal([], Holidays.between(first, last, :de).map{|h| h[:date].to_s}, year)
+  show_cal([], [], Holidays.between(first, last, :de).map{|h| h[:date].to_s}, year)
 end
 
 post '/:year?' do
   halt_on_empty_vacation
-  cal_doc = db.save_doc(:vacation => params[:vacation], :holidays => params[:holidays])
+  cal_doc = db.save_doc(vacation: params[:vacation], half: params[:half], holidays: params[:holidays])
   content_type :json
   url = "/cal/#{cal_doc['id']}"
   url += "/#{params[:year]}" if params[:year]
@@ -208,7 +211,7 @@ get '/cal/:calendar/?:year?' do |cal, year|
   year ||= Time.now.year.to_s
   first = Date.ordinal(year.to_i, 1)
   last = Date.ordinal(year.to_i, -1)
-  show_cal(doc['vacation'][year] || [],
+  show_cal(doc['vacation'][year] || [], (doc['half'] || {})[year] || [],
       doc['holidays'][year] || Holidays.between(first, last, :de).map{|h| h[:date].to_s}, year.to_i)
 end
 
@@ -217,6 +220,11 @@ post '/cal/:calendar/?:year?' do
   doc = db.get(params[:calendar])
   doc['vacation'].merge!(params[:vacation])
   doc['holidays'].merge!(params[:holidays])
+  if doc['half']
+    doc['half'].merge!(params[:half])
+  else
+    doc['half'] = params[:half]
+  end
   cal_doc = db.save_doc(doc)
   content_type :json
   url = "/cal/#{cal_doc['id']}"

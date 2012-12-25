@@ -36,3 +36,7 @@ Then /^I should see "([^"]*)" in a popover$/ do |text|
   page.should have_selector('.popover')
   page.find('.popover').text.should =~ %r(#{text})
 end
+
+When /^I save the calendar$/ do
+  page.find_by_id("save").click
+end

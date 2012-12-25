@@ -75,9 +75,14 @@ describe "Recharge" do
       it "should put holidays and vacation days onto the Couch" do
         couchdb.should_receive(:save_doc).with({
           :vacation => {'2011' => %w(20110101)},
+          :half => {'2011' => %w(20110101)},
           :holidays => {"my" => "holidays"}
         }).and_return({})
-        post @url, {:vacation => {'2011' => %w(20110101)}, :holidays => {:my => :holidays}}
+        post @url, {
+          vacation: {'2011' => %w(20110101)},
+          half: {'2011' => %w(20110101)},
+          holidays: {:my => :holidays}
+        }
       end
     end
 
@@ -90,9 +95,13 @@ describe "Recharge" do
       it "should put holidays and vacation days onto the Couch" do
         couchdb.should_receive(:save_doc).with({
           :vacation => {'2012' => %w(20120101)},
+          :half => {'2012' => %w(20120101)},
           :holidays => {"my" => "holidays"}
         }).and_return({})
-        post @url, {:vacation => {'2012' => %w(20120101)}, :holidays => {:my => :holidays}}
+        post @url, {
+          vacation: {'2012' => %w(20120101)},
+          half: {'2012' => %w(20120101)},
+          holidays: {:my => :holidays}}
       end
     end
 
@@ -112,10 +121,12 @@ describe "Recharge" do
         couchdb.should_receive(:save_doc).with({
           '_id' => 'doc_id',
           'vacation' => {'2011' => %w(20110101 20110102 20110303)},
+          'half' => {'2011' => %w(20110101 20110102)},
           'holidays' => {'2011' => %w(20110106)}
         }).and_return({})
         post @url, {
           :vacation => {'2011' => %w(20110101 20110102 20110303)},
+          :half => {'2011' => %w(20110101 20110102)},
           :holidays => {'2011' => %w(20110106)}
         }
       end
@@ -124,10 +135,12 @@ describe "Recharge" do
         couchdb.should_receive(:save_doc).with({
           '_id' => 'doc_id',
           'vacation' => {'2011' => %w(20110101 20110102), '2012' => %w(20120101)},
+          'half' => {'2012' => %w(20120101)},
           'holidays' => {'2011' => %w(20110106), '2012' => %w(20120106)}
         }).and_return({})
         post @url, {
           :vacation => {'2012' => %w(20120101)},
+          :half => {'2012' => %w(20120101)},
           :holidays => {'2012' => %w(20120106)}
         }
       end
