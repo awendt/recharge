@@ -10,6 +10,7 @@
     $(function() {
       var toggle_vacation_class = "vacation";
       $("#copy").popover({trigger: 'manual', placement: 'top'});
+      $("#halfdays").popover();
 
       $("#halfdays").click(function() {
         $(".vacation, #save").expose({
@@ -186,8 +187,6 @@
         <div class="span12 form-inline">
           <span class="label label-success">Los geht's:</span>
           Klick deine Urlaubstage für <%= year %> einfach an.
-          <span class="label label-important">Neu:</span>
-          <button class="btn btn-link" id="halfdays">Halbe Tage.</button>
           <label for="region">Feiertage anzeigen für:</label>
           <select id="region" class="medium">
             <option name="de_by">Bayern</option>
@@ -218,11 +217,14 @@
         <div class="span2">
           <%= link_to_previous_year(year) %>
         </div>
-        <div class="span3 offset1">
+        <div class="span3">
           <button id="save" class="btn btn-success"><%= button_label %></button>
         </div>
-        <div class="span4">
+        <div class="span3">
           <%= link_to_icalendar_export %>
+        </div>
+        <div class="span2">
+          <button id="halfdays" class="btn" rel="popover" title="Halbe Tage markieren" data-content="Klicke hier, um bereits markierte Tage auszuwählen, die nur halb zählen." data-trigger="hover" data-placement="top">&#xbd; Tage markieren</button>
         </div>
         <div class="span2">
           <%= link_to_next_year(year) %>
