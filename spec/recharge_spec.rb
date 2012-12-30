@@ -36,7 +36,9 @@ describe "Recharge" do
         }
         last_response["Content-Type"].should =~ %r(application/json)
       end
+    end
 
+    shared_examples_for "all vacation updates" do
       it "returns a redirect URL in JSON" do
         couchdb.should_receive(:save_doc).with(anything).and_return({'id' => 'some_id'})
         post @url, {
@@ -71,6 +73,7 @@ describe "Recharge" do
       before { @url = '/' }
 
       it_should_behave_like 'all updates'
+      it_should_behave_like 'all vacation updates'
 
       it "should put holidays and vacation days onto the Couch" do
         couchdb.should_receive(:save_doc).with({
@@ -91,6 +94,7 @@ describe "Recharge" do
       before { @url = '/2012' }
 
       it_should_behave_like 'all updates'
+      it_should_behave_like 'all vacation updates'
 
       it "should put holidays and vacation days onto the Couch" do
         couchdb.should_receive(:save_doc).with({
@@ -116,6 +120,7 @@ describe "Recharge" do
       end
 
       it_should_behave_like 'all updates'
+      it_should_behave_like 'all vacation updates'
 
       it "should put holidays and vacation days onto the Couch" do
         couchdb.should_receive(:save_doc).with({
@@ -174,6 +179,32 @@ describe "Recharge" do
       it 'assigns a display name for the calendar' do
         get '/ics/doc_id'
         last_response.body.should =~ /X-WR-CALNAME:Vacation/m
+      end
+    end
+
+    describe 'renaming' do
+      before do
+        @url = '/cal/doc_id/name'
+        couchdb.stub(:get).with('doc_id').and_return({
+          '_id' => 'doc_id',
+          'vacation' => {'2011' => %w(20110101 20110102)},
+          'holidays' => {'2011' => %w(20110106)}
+        })
+      end
+
+      it_should_behave_like 'all updates'
+
+      it 'sets the name property' do
+        couchdb.should_receive(:save_doc).with(
+            hash_including({'name' => 'Urlaubskalender'})).and_return({'id' => 'doc_id'})
+        put @url, {name: 'Urlaubskalender'}
+      end
+
+      it 'returns the name for the view' do
+        couchdb.stub(:save_doc).and_return({'id' => 'saved_doc_id'})
+        couchdb.stub(:get).with('saved_doc_id').and_return({'name' => 'saved_name'})
+        put @url, {name: 'Urlaubskalender'}
+        JSON.parse(last_response.body)["name"].should == 'saved_name'
       end
     end
 

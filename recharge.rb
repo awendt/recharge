@@ -132,7 +132,7 @@ helpers do
     Rack::Csrf.csrf_token(env)
   end
 
-  def show_link_to_ical_export?
+  def on_saved_calendar?
     request.fullpath =~ /^\/cal\//
   end
 
@@ -142,7 +142,7 @@ helpers do
   end
 
   def link_to_icalendar_export
-    if show_link_to_ical_export?
+    if on_saved_calendar?
       %Q!<button id="copy" class="btn" rel="popover" data-title="Diesen Kalender abonnieren" data-content="Mit dieser Adresse kann der Kalender in Programmen wie iCal, Outlook oder Sunbird abonniert werden."><i class="icon-calendar"></i> Kalenderadresse kopieren</button>!
     else
       '&nbsp;'
@@ -182,8 +182,9 @@ helpers do
     ranges << Range.new(left,right)
   end
 
-  def show_cal(vacation, half, holidays, year)
-    erb :index, :locals => {vacation: vacation, half: half, holidays: holidays, year: year}
+  def show_cal(name, vacation, half, holidays, year)
+    erb :index, :locals => {vacation: vacation, half: half, holidays: holidays, year: year,
+        name: name}
   end
 end
 
@@ -192,7 +193,7 @@ get '/:year?' do
   year = (params[:year] || Time.now.year).to_i
   first = Date.ordinal(year, 1)
   last = Date.ordinal(year, -1)
-  show_cal([], [], Holidays.between(first, last, :de).map{|h| h[:date].to_s}, year)
+  show_cal('Recharge', [], [], Holidays.between(first, last, :de).map{|h| h[:date].to_s}, year)
 end
 
 post '/:year?' do
@@ -211,7 +212,7 @@ get '/cal/:calendar/?:year?' do |cal, year|
   year ||= Time.now.year.to_s
   first = Date.ordinal(year.to_i, 1)
   last = Date.ordinal(year.to_i, -1)
-  show_cal(doc['vacation'][year] || [], (doc['half'] || {})[year] || [],
+  show_cal(doc['name'] || 'Mein Kalender', doc['vacation'][year] || [], (doc['half'] || {})[year] || [],
       doc['holidays'][year] || Holidays.between(first, last, :de).map{|h| h[:date].to_s}, year.to_i)
 end
 
@@ -230,6 +231,14 @@ post '/cal/:calendar/?:year?' do
   url = "/cal/#{cal_doc['id']}"
   url += "/#{params[:year]}" if params[:year]
   {:url => url}.to_json
+end
+
+put '/cal/:calendar/name' do
+  doc = db.get(params[:calendar])
+  doc['name'] = params[:name]
+  response = db.save_doc(doc)
+  content_type :json
+  {name: db.get(response['id'])['name']}.to_json
 end
 
 get '/ics/:calendar' do

@@ -40,3 +40,9 @@ end
 When /^I save the calendar$/ do
   page.find_by_id("save").click
 end
+
+When /^I rename the calendar to "([^"]*)"$/ do |new_name|
+  page.find_by_id("rename").click
+  fill_in('name', with: new_name)
+  page.find_by_id('save_rename').click
+end
