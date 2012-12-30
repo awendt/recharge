@@ -1,6 +1,6 @@
 /* Override some defaults */
 html, body {
-  background:url(http://s3-eu-west-1.amazonaws.com/awendt/background.jpg) repeat-y center;
+  background:url(http://s3-eu-west-1.amazonaws.com/awendt/recharge/background.jpg) repeat-y center;
 }
 
 h1 {
