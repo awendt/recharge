@@ -131,6 +131,11 @@
           }
         });
       });
+      var collect_ids_from = function(selector) {
+        return $.makeArray($(selector).map(function() {
+          return $(this).attr("id");
+        }));
+      };
       $("#save").click(function() {
         $(this).attr('disabled', 'disabled').text('Speichern...');
         $.ajax({
@@ -138,19 +143,13 @@
           dataType: 'json',
           data: {
             vacation: {
-              <%= year %>: $.makeArray($(".vacation").map(function() {
-                return $(this).attr("id");
-              }))
+              <%= year %>: collect_ids_from(".vacation")
             },
             half: {
-              <%= year %>: $.makeArray($(".vacation.half").map(function() {
-                return $(this).attr("id");
-              }))
+              <%= year %>: collect_ids_from(".vacation.half")
             },
             holidays: {
-              <%= year %>: $.makeArray($(".holiday.active").map(function() {
-                return $(this).attr("id");
-              }))
+              <%= year %>: collect_ids_from(".holiday.active")
             },
             _csrf: "<%= csrf_token %>"
           },
