@@ -169,16 +169,28 @@ describe "Recharge" do
         last_response.body.should =~ /^BEGIN:VCALENDAR/
         last_response.body.scan(/BEGIN:VEVENT/).should have(3).items
         last_response.body.should =~
-            /BEGIN:VEVENT.+DTEND:20110103.+DTSTART:20110101.+SUMMARY:Vacation.+END:VEVENT/m
+            /BEGIN:VEVENT.+DTEND:20110103.+DTSTART:20110101.+SUMMARY:Recharge.+END:VEVENT/m
         last_response.body.should =~
-            /BEGIN:VEVENT.+DTEND:20110105.+DTSTART:20110104.+SUMMARY:Vacation.+END:VEVENT/m
+            /BEGIN:VEVENT.+DTEND:20110105.+DTSTART:20110104.+SUMMARY:Recharge.+END:VEVENT/m
         last_response.body.should =~
-            /BEGIN:VEVENT.+DTEND:20120103.+DTSTART:20120102.+SUMMARY:Vacation.+END:VEVENT/m
+            /BEGIN:VEVENT.+DTEND:20120103.+DTSTART:20120102.+SUMMARY:Recharge.+END:VEVENT/m
       end
 
-      it 'assigns a display name for the calendar' do
+      it 'assigns a default display name for the calendar' do
         get '/ics/doc_id'
-        last_response.body.should =~ /X-WR-CALNAME:Vacation/m
+        last_response.body.should =~ /X-WR-CALNAME:Recharge/m
+      end
+
+      it 'assigns the name of the calendar if given' do
+        couchdb.stub(:get).with('doc_id').and_return({
+          '_id' => 'doc_id',
+          'name' => 'My calendar',
+          'vacation' => {'2011' => %w(20110101 20110102 20110104), '2012' => %w(20120102)}
+        })
+        get '/ics/doc_id'
+        last_response.body.should =~ /X-WR-CALNAME:My calendar/m
+        last_response.body.should =~
+            /BEGIN:VEVENT.+DTEND:20110103.+DTSTART:20110101.+SUMMARY:My calendar.+END:VEVENT/m
       end
     end
 
