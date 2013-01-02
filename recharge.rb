@@ -186,6 +186,14 @@ helpers do
     erb :index, :locals => {vacation: vacation, half: half, holidays: holidays, year: year,
         name: name}
   end
+
+  def page_title(name)
+    if on_saved_calendar?
+      "#{name} — Recharge"
+    else
+      "Recharge"
+    end
+  end
 end
 
 get '/:year?' do

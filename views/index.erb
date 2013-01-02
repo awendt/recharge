@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Recharge</title>
+  <title><%= page_title(name) %></title>
   <link rel="stylesheet" type="text/css" media="screen" href="/assets/app.css" />
   <link rel="shortcut icon" href="/favicon.ico" />
 </head>
@@ -116,6 +116,7 @@
           },
           success: function(data) {
             $("h1").html('<span id="title">'+ data.name +'</span><button class="btn btn-link" id="rename">umbenennen</button>');
+            document.title = data.name + " — Recharge";
           },
           error: function(jqXHR, textStatus, errorThrown) {
             $("#save_rename")

@@ -46,3 +46,7 @@ When /^I rename the calendar to "([^"]*)"$/ do |new_name|
   fill_in('name', with: new_name)
   page.find_by_id('save_rename').click
 end
+
+Then /^I should see "([^"]*)" as document title$/ do |title|
+  page.should have_css('head title', text: title)
+end
