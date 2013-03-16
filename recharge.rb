@@ -132,6 +132,10 @@ helpers do
     Rack::Csrf.csrf_token(env)
   end
 
+  def meta_tag_noindex
+    '<meta name="robots" content="noindex">' unless request.fullpath == '/'
+  end
+
   def on_saved_calendar?
     request.fullpath =~ /^\/cal\//
   end
