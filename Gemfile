@@ -1,4 +1,5 @@
-source :gemcutter
+source 'https://rubygems.org'
+
 gem 'sinatra'
 gem 'rack_csrf', :require => 'rack/csrf'
 gem 'couchrest'
