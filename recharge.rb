@@ -195,7 +195,7 @@ helpers do
     if on_saved_calendar?
       "#{name} — Recharge"
     else
-      "Recharge"
+      "Recharge — kostenloser Online-Urlaubsplaner ohne Excel"
     end
   end
 end
