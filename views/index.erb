@@ -16,11 +16,11 @@
   <div class="container">
     <div class="content">
       <div class="page-header">
-        <h1 class="form-inline">
-          <span id="title"><%= name %></span>
+        <h1>
           <% if on_saved_calendar? %>
-          <button class="btn btn-link" id="rename">umbenennen</button>
+          <span id="title"><%= name %></span>
           <% else %>
+          <span><%= name %></span>
           <small>— zählt deine Urlaubstage, damit du es nicht machen musst!</small>
           <% end %>
         </h1>
@@ -105,34 +105,21 @@
         });
       });
 
-      $("#rename").live("click", function() {
-        var original_text = $("h1 #title").html();
-        $("h1").html('<input id="name" class="input-medium" type="text" value="' + original_text + '" />' +
-          ' <button id="save_rename" class="btn btn-small">Speichern</button> <a href="<%= calendar_url.gsub(/ics/, 'cal') %>" class="btn btn-small btn-link">Abbrechen</a>');
-        $("h1 input").focus();
-      });
-      $("#save_rename").live("click", function() {
-        $.ajax({
-          url: '<%= calendar_url.gsub(/ics/, 'cal') %>/name',
-          type: 'PUT',
-          dataType: 'json',
-          data: {
-            name: $('#name').attr("value"),
-            _csrf: "<%= csrf_token %>"
-          },
-          success: function(data) {
-            $("h1").html('<span id="title">'+ data.name +'</span><button class="btn btn-link" id="rename">umbenennen</button>');
-            document.title = data.name + " — Recharge";
-          },
-          error: function(jqXHR, textStatus, errorThrown) {
-            $("#save_rename")
-              .attr("rel", "popover")
-              .attr("title", "Speichern fehlgeschlagen")
-              .attr("data-content", "Da hat etwas nicht geklappt. Bitte versuch es später erneut.")
-              .popover({trigger: 'manual', placement: 'bottom'})
-              .popover("show");
-          }
-        });
+      $.fn.editable.defaults.ajaxOptions = {type: "put"};
+      $('#title').editable({
+        params: function(params) {
+          params.name = params.value;
+          return params;
+        },
+        success: function(response, newValue) {
+          document.title = response.name + " — Recharge";
+          return {newValue: response.name};
+        },
+        type: 'text',
+        pk: 1,
+        url: '<%= calendar_url.gsub(/ics/, 'cal') %>/name',
+        placement: 'bottom',
+        title: 'Kalender umbenennen in:'
       });
 
       var cookie_name = location.pathname.replace(/\//g, '_');

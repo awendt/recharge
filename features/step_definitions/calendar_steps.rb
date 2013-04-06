@@ -42,9 +42,9 @@ When /^I save the calendar$/ do
 end
 
 When /^I rename the calendar to "([^"]*)"$/ do |new_name|
-  page.find_by_id("rename").click
-  fill_in('name', with: new_name)
-  page.find_by_id('save_rename').click
+  page.find_by_id('title').click
+  page.find(:fillable_field, 'div.editable-input input').set(new_name)
+  page.find('.editable-submit').click
 end
 
 Then /^I should see "([^"]*)" as document title$/ do |title|

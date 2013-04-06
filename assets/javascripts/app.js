@@ -5,3 +5,4 @@
 //= require jquery.tools.min
 //= require bootstrap-tooltip
 //= require bootstrap-popover
+//= require bootstrap-editable
