@@ -68,10 +68,10 @@ helpers do
         cal << %(<tr id="#{date.year}#{'%02d' % month}">)
         cal << %(<th>#{month_name_for(month)}</th>)
       end
-      next if weekend?(date)
+      next if date.saturday? || date.sunday?
       css_classes = []
-      css_classes << 'monday' if monday?(date)
-      css_classes << 'friday' if friday?(date)
+      css_classes << 'monday' if date.monday?
+      css_classes << 'friday' if date.friday?
       if vacation.include?(timestamp)
         css_classes << 'vacation'
         css_classes << 'half' if half.include?(timestamp)
@@ -89,18 +89,6 @@ helpers do
     cal << %(</tbody>)
     cal << %(</table>)
     cal.join("\n")
-  end
-
-  def monday?(time)
-    time.wday == 1
-  end
-
-  def friday?(time)
-    time.wday == 5
-  end
-
-  def weekend?(time)
-    [0,6].include?(time.wday)
   end
 
   def id_for(*args)
