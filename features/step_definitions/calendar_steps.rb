@@ -43,7 +43,7 @@ end
 
 When /^I rename the calendar to "([^"]*)"$/ do |new_name|
   page.find_by_id('title').click
-  page.find(:fillable_field, 'div.editable-input input').set(new_name)
+  page.find('div.editable-input input').set(new_name)
   page.find('.editable-submit').click
 end
 
