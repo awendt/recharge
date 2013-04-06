@@ -17,17 +17,16 @@ When /^I (de-)?select vacation on "([^"]*)"$/ do |ignored, date|
 end
 
 Then /^I should see vacation days from "([^"]*)" to "([^"]*)"$/ do |from, to|
-  days = (from..to).to_a
+  days = (from..to)
   days.should have_at_least(1).item
 
-  page.should have_selector('.vacation', :count => days.count)
   days.each do |id|
-    page.find_by_id(id)['class'].split.should include('vacation')
+    page.should have_selector("##{id}.vacation", count: 1)
   end
 end
 
 Then /^I should see a vacation day on "([^"]*)"$/ do |date|
-  page.find_by_id(date)['class'].split.should include('vacation')
+  page.should have_selector("##{date}.vacation", count: 1)
 end
 
 When /^I mark vacation days on "([^"]*)" and "([^"]*)" as half$/ do |day1, day2|
