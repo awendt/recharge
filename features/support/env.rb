@@ -17,7 +17,7 @@ class RechargeWorld
   include RSpec::Matchers
 
   def db
-    @db ||= CouchRest.database(settings.db)
+    @db ||= CouchRest.database(Sinatra::Application.settings.db)
   end
 end
 
