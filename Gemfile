@@ -23,5 +23,5 @@ group :test do
   gem "webrat"
   gem 'cucumber'
   gem 'cucumber-sinatra'
-  gem 'capybara'
+  gem 'capybara', '<2.1'
 end
