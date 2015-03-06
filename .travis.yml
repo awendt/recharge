@@ -1,5 +1,6 @@
 language: ruby
 env: RECHARGE_TEST_DB=http://localhost:5984/recharge_travis
+sudo: false
 before_script: "curl -X PUT $RECHARGE_TEST_DB"
 services:
   - couchdb
