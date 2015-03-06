@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
-ruby '1.9.3'
+group :production do
+  ruby '1.9.3'
+end
 
 gem 'sinatra'
 gem 'rack_csrf', :require => 'rack/csrf'
