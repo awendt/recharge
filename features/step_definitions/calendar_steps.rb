@@ -1,8 +1,8 @@
 Then /^I should see links for next and previous year$/ do
   next_year = Time.now.year + 1
   previous_year = Time.now.year - 1
-  Then %Q(I should see "#{next_year}" within "a#next")
-  And %Q(I should see "#{previous_year}" within "a#previous")
+  step %Q(I should see "#{next_year}" within "a#next")
+  step %Q(I should see "#{previous_year}" within "a#previous")
 end
 
 When /^I follow (next|previous) year's link$/ do |direction|
@@ -48,5 +48,5 @@ When /^I rename the calendar to "([^"]*)"$/ do |new_name|
 end
 
 Then /^I should see "([^"]*)" as document title$/ do |title|
-  page.should have_css('head title', text: title)
+  expect(page).to have_title(title)
 end

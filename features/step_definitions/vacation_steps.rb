@@ -1,9 +1,9 @@
 Then /^I should not see vacation days$/ do
-  page.all(".vacation").should be_empty
+  expect(page).to_not have_selector('.vacation')
 end
 
 Then /^I should see a big fat "([^"]*)" as vacation day count$/ do |count|
-  page.find_by_id('count').text.should == count
+  expect(page).to have_css('#count', text: count)
 end
 
 When /^I (de-)?select vacation from "([^"]*)" to "([^"]*)"$/ do |ignored, from, to|
@@ -18,15 +18,16 @@ end
 
 Then /^I should see vacation days from "([^"]*)" to "([^"]*)"$/ do |from, to|
   days = (from..to)
-  days.should have_at_least(1).item
+  # days.size returns nil since the range items are not numeric
+  expect(days.to_a.size).to be >= 1
 
   days.each do |id|
-    page.should have_selector("##{id}.vacation", count: 1)
+    expect(page).to have_selector(".vacation[id='#{id}']", count: 1)
   end
 end
 
 Then /^I should see a vacation day on "([^"]*)"$/ do |date|
-  page.should have_selector("##{date}.vacation", count: 1)
+  expect(page).to have_selector(".vacation[id='#{date}']", count: 1)
 end
 
 When /^I mark vacation days on "([^"]*)" and "([^"]*)" as half$/ do |day1, day2|
