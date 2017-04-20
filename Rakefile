@@ -11,7 +11,6 @@ Cucumber::Rake::Task.new(:features) do |t|
 end
 
 RSpec::Core::RakeTask.new(:spec) do |t|
-  t.rcov = false
   t.pattern = 'spec/*_spec.rb'
 end
 
