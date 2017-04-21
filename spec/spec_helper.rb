@@ -10,6 +10,7 @@ Dir["./spec/support/**/*.rb"].sort.each { |f| require f }
 set :environment, :test
 
 Capybara.app = Rack::Builder.parse_file(File.expand_path('../../config.ru', __FILE__)).first
+Capybara.default_max_wait_time = 5
 
 RSpec.configure do |config|
   config.include(Rack::Test::Methods)

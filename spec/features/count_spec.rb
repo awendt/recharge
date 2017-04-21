@@ -29,10 +29,10 @@ feature 'User sees the count being updated' do
     save_calendar
     expect(page).to have_selector('#count', text: '5')
 
-    page.click_link('2012')
+    click_link('2012')
     expect(page).to have_selector('#count', text: '0')
 
-    page.click_link('2011')
+    click_link('2011')
     expect(page).to have_selector('#count', text: '5')
   end
 
@@ -42,14 +42,14 @@ feature 'User sees the count being updated' do
     save_calendar
     expect(page).to have_selector('#count', text: '5')
 
-    page.click_link('2012')
+    click_link('2012')
     expect(page).to have_selector('#count', text: '0')
 
     select_vacation('20120312', '20120315')
     save_calendar
     expect(page).to have_selector('#count', text: '4')
 
-    page.click_link('2011')
+    click_link('2011')
     expect(page).to have_selector('#count', text: '5')
   end
 
