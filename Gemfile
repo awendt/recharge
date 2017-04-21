@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'sinatra'
 gem 'rack_csrf', :require => 'rack/csrf'
 gem 'couchrest'
-gem 'icalendar'
+gem 'icalendar', '1.3.0' # upgrading breaks our usage of custom_property and dtstart
 gem 'holidays', '1.0.5' # upgrading breaks require 'holidays/de'
 gem 'newrelic_rpm'
 gem 'thin'

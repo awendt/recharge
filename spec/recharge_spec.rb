@@ -22,7 +22,7 @@ describe "Recharge" do
     end
 
     it 'tells Googlebot to bugger off on saved calendars' do
-      CouchRest::Database.any_instance.should_receive(:get).and_return(mock.as_null_object)
+      CouchRest::Database.any_instance.should_receive(:get).and_return(double.as_null_object)
       get '/cal/my_cal'
       last_response.should have_selector("meta[name=robots]")
       last_response.should have_selector("meta[content=noindex]")
@@ -189,7 +189,7 @@ describe "Recharge" do
       it 'groups vacations in ranges' do
         get '/ics/doc_id'
         last_response.body.should =~ /^BEGIN:VCALENDAR/
-        last_response.body.scan(/BEGIN:VEVENT/).should have(3).items
+        expect(last_response.body.scan(/BEGIN:VEVENT/).size).to eq(3)
         last_response.body.should =~
             /BEGIN:VEVENT.+DTEND:20110103.+DTSTART:20110101.+SUMMARY:Recharge.+END:VEVENT/m
         last_response.body.should =~
