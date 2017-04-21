@@ -120,19 +120,6 @@
           .popover('show');
       }
 
-      if (window.location.hash === '#moved') {
-        window.location.hash = "";
-        history.pushState('', document.title, window.location.pathname);
-        $(".page-header h1")
-          .attr("rel", "popover")
-          .attr("title", "Wir sind umgezogen")
-          .attr("data-content",
-              "Dein Urlaubskalender hat eine neue Heimat bei recharge.wendtswelt.de gefunden."
-              + " Bitte denk dran, deine Lesezeichen zu aktualisieren.")
-          .popover({trigger: 'manual', placement: 'bottom'})
-          .popover('show');
-      }
-
       $("body").click(function() {
         $("[rel=popover]").each(function() { $(this).popover('hide') });
       });
