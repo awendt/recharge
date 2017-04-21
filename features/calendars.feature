@@ -15,19 +15,3 @@ I want to see a calendar on the homepage
 
     When I save the calendar
     Then I should not see a popover
-
-@javascript
-  Scenario: Naming calendars
-    When I go to the "2012" calendar
-    Then I should see "Recharge" within "h1"
-    And I should see "Recharge" as document title
-
-    When I select vacation from "20120116" to "20120120"
-    And I save the calendar
-    Then I should see "Mein Kalender" within "h1"
-    And I should see "Mein Kalender" as document title
-
-    When I rename the calendar to "Mein toller Kalender"
-    Then I should not see "Mein Kalender" within "h1"
-    But I should see "Mein toller Kalender" within "h1"
-    And I should see "Mein toller Kalender" as document title

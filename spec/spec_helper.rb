@@ -5,6 +5,7 @@ require 'capybara/rspec'
 Bundler.require(:default, :test)
 
 require File.expand_path('../../recharge', __FILE__)
+Dir["./spec/support/**/*.rb"].sort.each { |f| require f }
 
 set :environment, :test
 

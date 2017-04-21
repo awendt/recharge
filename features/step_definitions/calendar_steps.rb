@@ -18,13 +18,3 @@ end
 When /^I save the calendar$/ do
   page.find_by_id("save").click
 end
-
-When /^I rename the calendar to "([^"]*)"$/ do |new_name|
-  page.find_by_id('title').click
-  page.find('div.editable-input input').set(new_name)
-  page.find('.editable-submit').click
-end
-
-Then /^I should see "([^"]*)" as document title$/ do |title|
-  expect(page).to have_title(title)
-end
