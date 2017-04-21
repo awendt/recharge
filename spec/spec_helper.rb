@@ -8,7 +8,7 @@ require File.expand_path('../../recharge', __FILE__)
 
 set :environment, :test
 
-Capybara.app = Sinatra::Application
+Capybara.app = Rack::Builder.parse_file(File.expand_path('../../config.ru', __FILE__)).first
 
 RSpec.configure do |config|
   config.include(Rack::Test::Methods)
