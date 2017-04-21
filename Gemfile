@@ -19,6 +19,7 @@ end
 
 group :test do
   gem "rspec"
+  gem 'rspec-its'
   gem "rack-test"
   gem 'cucumber'
   gem 'cucumber-sinatra'

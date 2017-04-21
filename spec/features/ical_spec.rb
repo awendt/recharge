@@ -25,6 +25,7 @@ describe "Recharge", type: :feature do
   context 'when on a saved calendar' do
 
     before do
+      # TODO: Use factory that wraps CouchRest::Document.new here
       allow_any_instance_of(CouchRest::Database).to receive(:get).and_return(double.as_null_object)
       visit '/cal/123'
     end

@@ -3,22 +3,6 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe "Recharge" do
 
-  it 'gzips responses' do
-    get '/', {}, {'HTTP_ACCEPT_ENCODING' => 'gzip'}
-    last_response.headers['Content-Encoding'].should =~ /gzip/
-  end
-
-  describe "Homepage and years" do
-
-    it 'includes a Cache-Control header in the response' do
-      get '/'
-      last_response['Cache-Control'].should =~ /public/
-      last_response['Cache-Control'].should =~ /must-revalidate/
-      last_response['Cache-Control'].should =~ /max-age=300/
-      last_response['Expires'].should_not be_empty
-    end
-  end
-
   describe "connecting to CouchDB" do
     let(:couchdb) { CouchRest::Database.any_instance }
 
@@ -48,18 +32,6 @@ describe "Recharge" do
         couchdb.should_not_receive(:save_doc)
         post @url, params.merge(:vacation => {'2011' => []})
         post @url, params.merge(:vacation => {'2011' => ""})
-      end
-    end
-
-    describe 'caching via HTTP' do
-      it 'should be supported through ETags' do
-        doc = CouchRest::Document.new
-        doc['vacation'] = doc['holidays'] = {}
-        doc['_rev'] = '15-xyz'
-        couchdb.stub(:get).with('doc_id').and_return(doc)
-
-        get '/cal/doc_id'
-        last_response['ETag'].should == '"15-xyz"'
       end
     end
 
