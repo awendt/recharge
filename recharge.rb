@@ -7,6 +7,7 @@ require 'yaml'
 require 'rack/csrf'
 require 'holidays'
 require 'holidays/de'
+require_relative './database'
 
 configure :production do
   set :db, "#{ENV['CLOUDANT_URL']}/recharge"
@@ -186,6 +187,10 @@ helpers do
       "Recharge — kostenloser Online-Urlaubsplaner ohne Excel"
     end
   end
+
+  def convert_days_format(days:, count_as:)
+    days.values.flatten.each_with_object({}) {|day, memo| memo[day] = count_as}
+  end
 end
 
 get '/:year?' do
@@ -196,40 +201,34 @@ get '/:year?' do
   show_cal('Recharge', [], [], Holidays.between(first, last, :de).map{|h| h[:date].to_s}, year)
 end
 
-post '/:year?' do
+post '/:year?' do |year|
   halt_on_empty_vacation
-  cal_doc = db.save_doc(vacation: params[:vacation], half: params[:half], holidays: params[:holidays])
+  vacation = convert_days_format(days: params[:vacation], count_as: 1.0)
+  id = SecureRandom.hex
+  Database.instance.put(id: id, year: year || Time.now.year, vacation: vacation)
   content_type :json
-  url = "/cal/#{cal_doc['id']}"
+  url = "/cal/#{id}"
   url += "/#{params[:year]}" if params[:year]
   response.set_cookie(url.gsub(%r(/), '_'), 'show_bookmark_hint')
   {:url => url}.to_json
 end
 
 get '/cal/:calendar/?:year?' do |cal, year|
-  doc = db.get(cal)
-  etag doc.rev
+  doc = (Database.instance.get(id: cal, year: year || Time.now.year) || {'vacation' => {}}).merge('holidays' => {})
   year ||= Time.now.year.to_s
   first = Date.ordinal(year.to_i, 1)
   last = Date.ordinal(year.to_i, -1)
-  show_cal(doc['name'] || 'Mein Kalender', doc['vacation'][year] || [], (doc['half'] || {})[year] || [],
+  show_cal(doc['name'] || 'Mein Kalender', doc['vacation'].keys || [], (doc['half'] || {})[year] || [],
       doc['holidays'][year] || Holidays.between(first, last, :de).map{|h| h[:date].to_s}, year.to_i)
 end
 
-post '/cal/:calendar/?:year?' do
+post '/cal/:calendar/?:year?' do |cal, year|
   halt_on_empty_vacation
-  doc = db.get(params[:calendar])
-  doc['vacation'].merge!(params[:vacation])
-  doc['holidays'].merge!(params[:holidays])
-  if doc['half']
-    doc['half'].merge!(params[:half])
-  else
-    doc['half'] = params[:half]
-  end
-  cal_doc = db.save_doc(doc)
+  vacation = convert_days_format(days: params[:vacation], count_as: 1.0)
+  Database.instance.put(id: cal, year: year || Time.now.year, vacation: vacation)
   content_type :json
-  url = "/cal/#{cal_doc['id']}"
-  url += "/#{params[:year]}" if params[:year]
+  url = "/cal/#{cal}"
+  url += "/#{year}" if year
   {:url => url}.to_json
 end
 
