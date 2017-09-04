@@ -1,15 +1,14 @@
 source 'https://rubygems.org'
-group :production do
-  ruby '1.9.3'
-end
 
 gem 'sinatra'
 gem 'rack_csrf', :require => 'rack/csrf'
 gem 'couchrest'
 gem 'icalendar'
-gem 'holidays'
+gem 'holidays', '1.0.5'
 gem 'newrelic_rpm'
 gem 'thin'
+
+gem 'aws-sdk'
 
 gem 'sprockets'
 gem 'yui-compressor', :require => 'yui/compressor'
