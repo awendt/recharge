@@ -114,7 +114,7 @@ helpers do
 
   def halt_on_empty_vacation
     halt 406, "Please mark anything as your vacation!" if !params[:vacation] ||
-        params[:vacation].empty? || params[:vacation].values.all?{|v| v.empty?}
+        params[:vacation].empty?
   end
 
   def csrf_token
@@ -187,10 +187,6 @@ helpers do
       "Recharge — kostenloser Online-Urlaubsplaner ohne Excel"
     end
   end
-
-  def convert_days_format(days:, count_as:)
-    days.values.flatten.each_with_object({}) {|day, memo| memo[day] = count_as}
-  end
 end
 
 get '/:year?' do
@@ -203,9 +199,8 @@ end
 
 post '/:year?' do |year|
   halt_on_empty_vacation
-  vacation = convert_days_format(days: params[:vacation], count_as: 1.0)
   id = SecureRandom.hex
-  Database.instance.put(id: id, year: year || Time.now.year, vacation: vacation)
+  Database.instance.put(id: id, year: year || Time.now.year, vacation: params[:vacation])
   content_type :json
   url = "/cal/#{id}"
   url += "/#{params[:year]}" if params[:year]
@@ -224,8 +219,7 @@ end
 
 post '/cal/:calendar/?:year?' do |cal, year|
   halt_on_empty_vacation
-  vacation = convert_days_format(days: params[:vacation], count_as: 1.0)
-  Database.instance.put(id: cal, year: year || Time.now.year, vacation: vacation)
+  Database.instance.put(id: cal, year: year || Time.now.year, vacation: params[:vacation])
   content_type :json
   url = "/cal/#{cal}"
   url += "/#{year}" if year

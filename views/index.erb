@@ -230,28 +230,22 @@
           }
         });
       });
-      var collect_ids_from = function(selector) {
-        return $.makeArray($(selector).map(function() {
-          return $(this).attr("id");
-        }));
+      var collect_ids_from = function(selector, count_as) {
+        var ids = {};
+        $(selector).each(function() {
+          ids[$(this).attr("id")] = count_as;
+        });
+        return ids;
       };
       $("#save").click(function() {
         $(this).attr('disabled', 'disabled').text('Speichern...');
         $.ajax({
           type: 'POST',
+          contentType: 'application/json',
           dataType: 'json',
-          data: {
-            vacation: {
-              <%= year %>: collect_ids_from(".vacation")
-            },
-            half: {
-              <%= year %>: collect_ids_from(".vacation.half")
-            },
-            holidays: {
-              <%= year %>: collect_ids_from(".holiday.active")
-            },
-            _csrf: "<%= csrf_token %>"
-          },
+          data: JSON.stringify({
+            vacation: collect_ids_from(".vacation", 1.0)
+          }),
           success: function(data) {
             location.href = data.url;
           },
