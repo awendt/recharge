@@ -61,6 +61,8 @@ GEM
     nokogiri (1.8.0)
       mini_portile2 (~> 2.2.0)
     rack (2.0.3)
+    rack-parser (0.7.0)
+      rack
     rack-protection (2.0.0)
       rack
     rack-test (0.7.0)
@@ -130,6 +132,7 @@ DEPENDENCIES
   holidays (= 1.0.5)
   icalendar
   newrelic_rpm
+  rack-parser
   rack-test
   rack_csrf
   rake

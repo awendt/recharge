@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'sinatra'
-gem 'rack_csrf', :require => 'rack/csrf'
+gem 'rack_csrf', require: 'rack/csrf'
+gem 'rack-parser', require: 'rack/parser'
 gem 'couchrest'
 gem 'icalendar'
 gem 'holidays', '1.0.5'
