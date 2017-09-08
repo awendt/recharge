@@ -56,7 +56,7 @@ helpers do
     end
   end
 
-  def calendar_for(year, vacation, half, active_holidays)
+  def calendar_for(year, vacation, active_holidays)
     first = Date.ordinal(year, 1)
     last = Date.ordinal(year, -1)
     holidays = holidays_in(year, :de)
@@ -73,11 +73,11 @@ helpers do
       css_classes = []
       css_classes << 'monday' if date.monday?
       css_classes << 'friday' if date.friday?
-      if vacation.include?(timestamp)
+      if vacation.key?(timestamp)
         css_classes << 'vacation'
-        css_classes << 'half' if half.include?(timestamp)
+        css_classes << 'half' if vacation[timestamp] == 0.5
       end
-      if holidays.has_key?(timestamp)
+      if holidays.key?(timestamp)
         css_classes << 'holiday'
         title = holidays[timestamp]
       else
@@ -175,8 +175,8 @@ helpers do
     ranges << Range.new(left,right)
   end
 
-  def show_cal(name, vacation, half, holidays, year)
-    erb :index, :locals => {vacation: vacation, half: half, holidays: holidays, year: year,
+  def show_cal(name, vacation, holidays, year)
+    erb :index, :locals => {vacation: vacation, holidays: holidays, year: year,
         name: name}
   end
 
@@ -194,7 +194,7 @@ get '/:year?' do
   year = (params[:year] || Time.now.year).to_i
   first = Date.ordinal(year, 1)
   last = Date.ordinal(year, -1)
-  show_cal('Recharge', [], [], Holidays.between(first, last, :de).map{|h| h[:date].to_s}, year)
+  show_cal('Recharge', {}, Holidays.between(first, last, :de).map{|h| h[:date].to_s}, year)
 end
 
 post '/:year?' do |year|
@@ -213,7 +213,7 @@ get '/cal/:calendar/?:year?' do |cal, year|
   year ||= Time.now.year.to_s
   first = Date.ordinal(year.to_i, 1)
   last = Date.ordinal(year.to_i, -1)
-  show_cal(doc['name'] || 'Mein Kalender', doc['vacation'].keys || [], (doc['half'] || {})[year] || [],
+  show_cal(doc['name'] || 'Mein Kalender', doc['vacation'] || {},
       doc['holidays'][year] || Holidays.between(first, last, :de).map{|h| h[:date].to_s}, year.to_i)
 end
 

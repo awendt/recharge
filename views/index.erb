@@ -58,7 +58,7 @@
       </div>
       <div class="row">
         <div class="span12">
-          <%= calendar_for(year, vacation, half, holidays) %>
+          <%= calendar_for(year, vacation, holidays) %>
         </div>
       </div>
       <div class="row">
@@ -230,10 +230,14 @@
           }
         });
       });
-      var collect_ids_from = function(selector, count_as) {
+      var collect_vacation = function(selector) {
         var ids = {};
         $(selector).each(function() {
-          ids[$(this).attr("id")] = count_as;
+          if ($(this).hasClass("half")) {
+            ids[$(this).attr("id")] = 0.5;
+          } else {
+            ids[$(this).attr("id")] = 1.0;
+          }
         });
         return ids;
       };
@@ -244,7 +248,7 @@
           contentType: 'application/json',
           dataType: 'json',
           data: JSON.stringify({
-            vacation: collect_ids_from(".vacation", 1.0)
+            vacation: collect_vacation(".vacation")
           }),
           success: function(data) {
             location.href = data.url;
