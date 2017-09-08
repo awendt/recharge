@@ -238,13 +238,13 @@ get '/ics/:calendar' do |cal|
   doc = Database.instance.get_all(id: cal)
   name = 'Recharge'
   calendar = Icalendar::Calendar.new
-  calendar.custom_property("X-WR-CALNAME", name)
+  calendar.append_custom_property("X-WR-CALNAME", name)
   doc.items.each do |by_year|
     ranges_from(by_year['vacation'].keys.sort).each do |vacation|
-      calendar.event do
-        dtstart Date.parse(vacation.begin)
-        dtend Date.parse(vacation.last).succ
-        summary name
+      calendar.event do |e|
+        e.dtstart = Icalendar::Values::Date.new(vacation.begin)
+        e.duration = "P#{vacation.count}D"
+        e.summary = name
       end
     end
   end
