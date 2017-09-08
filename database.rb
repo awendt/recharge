@@ -23,6 +23,12 @@ class Database
     @ddb.get_item(key: key(id, year), table_name: TABLE_NAME).item
   end
 
+  def get_all(id:)
+    condition = "#{HASH_KEY} = :id"
+    attribute_values = {":id" => id}
+    @ddb.query(key_condition_expression: condition, expression_attribute_values: attribute_values, table_name: TABLE_NAME)
+  end
+
   private
 
   def key(id, year)

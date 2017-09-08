@@ -47,7 +47,7 @@ GEM
     highline (1.7.8)
     holidays (1.0.5)
     httpclient (2.8.3)
-    icalendar (2.4.1)
+    icalendar (1.3.0)
     jmespath (1.3.1)
     libv8 (3.16.14.19)
     mime-types (3.1)
@@ -130,7 +130,7 @@ DEPENDENCIES
   cucumber
   cucumber-sinatra
   holidays (= 1.0.5)
-  icalendar
+  icalendar (= 1.3.0)
   newrelic_rpm
   rack-parser
   rack-test
