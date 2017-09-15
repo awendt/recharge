@@ -1,17 +1,12 @@
 language: ruby
 
-env: RECHARGE_TEST_DB=http://localhost:5984/recharge_travis
-
 sudo: false
-
-services:
-  - couchdb
 
 addons:
   firefox: "latest"
 
 before_script:
-  - docker-compose version
+  - docker-compose up
 
 rvm:
   - 2.3.1
