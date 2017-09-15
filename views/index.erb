@@ -87,7 +87,6 @@
   <script type="text/javascript" src="/assets/app.js"></script>
   <script>
     $(function() {
-      var toggle_vacation_class = "vacation";
       $("#copy").popover({trigger: 'manual', placement: 'top'});
 
       $.fn.editable.defaults.ajaxOptions = {type: "put"};
@@ -115,19 +114,6 @@
           .attr("title", "Leg dir ein Lesezeichen an!")
           .attr("data-content", "Unter dieser festen Adresse wird dein Kalender verfügbar bleiben."
               + " Leg dir am besten ein Lesezeichen an, damit du ihn wiederfindest.")
-          .popover({trigger: 'manual', placement: 'bottom'})
-          .popover('show');
-      }
-
-      if (window.location.hash === '#moved') {
-        window.location.hash = "";
-        history.pushState('', document.title, window.location.pathname);
-        $(".page-header h1")
-          .attr("rel", "popover")
-          .attr("title", "Wir sind umgezogen")
-          .attr("data-content",
-              "Dein Urlaubskalender hat eine neue Heimat bei recharge.wendtswelt.de gefunden."
-              + " Bitte denk dran, deine Lesezeichen zu aktualisieren.")
           .popover({trigger: 'manual', placement: 'bottom'})
           .popover('show');
       }

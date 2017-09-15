@@ -5,7 +5,7 @@ gem 'rack_csrf', require: 'rack/csrf'
 gem 'rack-parser', require: 'rack/parser'
 gem 'couchrest'
 gem 'icalendar'
-gem 'holidays', '1.0.5'
+gem 'holidays', '1.0.5' # upgrading breaks require 'holidays/de'
 gem 'newrelic_rpm'
 gem 'thin'
 
@@ -22,9 +22,10 @@ end
 
 group :test do
   gem "rspec"
+  gem 'rspec-its'
   gem "rack-test"
-  gem "webrat"
   gem 'cucumber'
   gem 'cucumber-sinatra'
-  gem 'capybara', '<2.1'
+  gem 'capybara'
+  gem 'selenium-webdriver'
 end
