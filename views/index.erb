@@ -72,7 +72,6 @@
           <%= link_to_icalendar_export %>
         </div>
         <div class="span2">
-          <button id="halfdays" class="btn" rel="popover" title="Halbe Tage wählen" data-content="Klicke hier, um bereits markierte Tage auszuwählen, die nur halb zählen." data-trigger="hover" data-placement="top">&#xbd; Tage wählen</button>
         </div>
         <div class="span2">
           <%= link_to_next_year(year) %>
@@ -90,20 +89,7 @@
   <script type="text/javascript" src="/assets/app.js"></script>
   <script>
     $(function() {
-      var toggle_vacation_class = "vacation";
       $("#copy").popover({trigger: 'manual', placement: 'top'});
-      $("#halfdays").popover();
-
-      $("#halfdays").click(function() {
-        $(".vacation, #save").expose({
-          onLoad: function() {
-            toggle_vacation_class = "half";
-          },
-          onClose: function() {
-            toggle_vacation_class = "vacation";
-          }
-        });
-      });
 
       $.fn.editable.defaults.ajaxOptions = {type: "put"};
       $('#title').editable({
@@ -130,19 +116,6 @@
           .attr("title", "Leg dir ein Lesezeichen an!")
           .attr("data-content", "Unter dieser festen Adresse wird dein Kalender verfügbar bleiben."
               + " Leg dir am besten ein Lesezeichen an, damit du ihn wiederfindest.")
-          .popover({trigger: 'manual', placement: 'bottom'})
-          .popover('show');
-      }
-
-      if (window.location.hash === '#moved') {
-        window.location.hash = "";
-        history.pushState('', document.title, window.location.pathname);
-        $(".page-header h1")
-          .attr("rel", "popover")
-          .attr("title", "Wir sind umgezogen")
-          .attr("data-content",
-              "Dein Urlaubskalender hat eine neue Heimat bei recharge.wendtswelt.de gefunden."
-              + " Bitte denk dran, deine Lesezeichen zu aktualisieren.")
           .popover({trigger: 'manual', placement: 'bottom'})
           .popover('show');
       }
@@ -179,9 +152,9 @@
             $(".vacation.half").not(".holiday.active").length/2;
         $("#count").text(count);
         if (count == 0) {
-          $("#save,#halfdays").attr('disabled', 'disabled');
+          $("#save").attr('disabled', 'disabled');
         } else {
-          $("#save,#halfdays").attr('disabled', false);
+          $("#save").attr('disabled', false);
           if (count == 1) {
             $(".calendar").addClass('flash');
           }
@@ -213,7 +186,13 @@
         if (e.shiftKey && $(this).hasClass("holiday")) {
           $(this).toggleClass("active");
         } else {
-          $(this).toggleClass(toggle_vacation_class);
+          if ($(this).hasClass("vacation half")) {
+            $(this).removeClass("vacation half");
+          } else if ($(this).hasClass("vacation")) {
+            $(this).addClass("half");
+          } else {
+            $(this).addClass("vacation");
+          }
         }
       }));
       $("#region").change(function() {
