@@ -3,49 +3,6 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe "Recharge" do
 
-  it 'gzips responses' do
-    get '/', {}, {'HTTP_ACCEPT_ENCODING' => 'gzip'}
-    last_response.headers['Content-Encoding'].should =~ /gzip/
-  end
-
-  describe 'indexing by robots' do
-
-    it 'welcomes Googlebot on the hompage' do
-      get '/'
-      last_response.should_not have_selector("meta[name=robots]")
-    end
-
-    it 'tells Googlebot to bugger off on other years' do
-      get '/2011'
-      last_response.should have_selector("meta[name=robots]")
-      last_response.should have_selector("meta[content=noindex]")
-    end
-
-    it 'tells Googlebot to bugger off on saved calendars' do
-      CouchRest::Database.any_instance.should_receive(:get).and_return(mock.as_null_object)
-      get '/cal/my_cal'
-      last_response.should have_selector("meta[name=robots]")
-      last_response.should have_selector("meta[content=noindex]")
-    end
-
-  end
-
-  describe "Homepage and years" do
-
-    it 'does not render a link to iCalendar export' do
-      get '/'
-      last_response.should_not have_selector("a[href*='/ics/']")
-    end
-
-    it 'includes a Cache-Control header in the response' do
-      get '/'
-      last_response['Cache-Control'].should =~ /public/
-      last_response['Cache-Control'].should =~ /must-revalidate/
-      last_response['Cache-Control'].should =~ /max-age=300/
-      last_response['Expires'].should_not be_empty
-    end
-  end
-
   describe "connecting to CouchDB" do
     let(:couchdb) { CouchRest::Database.any_instance }
 
@@ -75,18 +32,6 @@ describe "Recharge" do
         couchdb.should_not_receive(:save_doc)
         post @url, params.merge(:vacation => {'2011' => []})
         post @url, params.merge(:vacation => {'2011' => ""})
-      end
-    end
-
-    describe 'caching via HTTP' do
-      it 'should be supported through ETags' do
-        doc = CouchRest::Document.new
-        doc['vacation'] = doc['holidays'] = {}
-        doc['_rev'] = '15-xyz'
-        couchdb.stub(:get).with('doc_id').and_return(doc)
-
-        get '/cal/doc_id'
-        last_response['ETag'].should == '"15-xyz"'
       end
     end
 
@@ -189,7 +134,7 @@ describe "Recharge" do
       it 'groups vacations in ranges' do
         get '/ics/doc_id'
         last_response.body.should =~ /^BEGIN:VCALENDAR/
-        last_response.body.scan(/BEGIN:VEVENT/).should have(3).items
+        expect(last_response.body.scan(/BEGIN:VEVENT/).size).to eq(3)
         last_response.body.should =~
             /BEGIN:VEVENT.+DTEND:20110103.+DTSTART:20110101.+SUMMARY:Recharge.+END:VEVENT/m
         last_response.body.should =~

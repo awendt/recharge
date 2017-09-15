@@ -1,21 +1,19 @@
 require 'rubygems'
 require 'bundler'
+require 'capybara/rspec'
 
 Bundler.require(:default, :test)
 
 require File.expand_path('../../recharge', __FILE__)
+Dir["./spec/support/**/*.rb"].sort.each { |f| require f }
 
 set :environment, :test
 
-Webrat.configure do |config|
-  config.mode = :rack
-  config.application_port = 4567
-end
+Capybara.app = Rack::Builder.parse_file(File.expand_path('../../config.ru', __FILE__)).first
+Capybara.default_max_wait_time = 5
 
 RSpec.configure do |config|
   config.include(Rack::Test::Methods)
-  config.include(Webrat::Methods)
-  config.include(Webrat::Matchers)
 
   def app
     Sinatra::Application
