@@ -1,6 +1,9 @@
 language: ruby
 
-env: DYNAMODB_URL=http://localhost:8000
+env:
+  - global:
+    - AWS_REGION=irrelevant
+    - DYNAMODB_URL=http://localhost:8000
 
 sudo: false
 
@@ -20,6 +23,7 @@ before_install:
 before_script:
   - firefox --version
   - "export DISPLAY=:99.0"
+  - ruby create_table.rb
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 
