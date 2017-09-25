@@ -1,11 +1,8 @@
 language: ruby
 
-env: RECHARGE_TEST_DB=http://localhost:5984/recharge_travis
+env: DYNAMODB_URL=http://localhost:8000
 
 sudo: false
-
-services:
-  - couchdb
 
 addons:
   firefox: "latest"
@@ -15,9 +12,12 @@ before_install:
   - mkdir geckodriver
   - tar -xzf geckodriver-v0.18.0-linux64.tar.gz -C geckodriver
   - export PATH=$PATH:$PWD/geckodriver
+  - wget https://s3.eu-central-1.amazonaws.com/dynamodb-local-frankfurt/dynamodb_local_latest.tar.gz
+  - mkdir ddb
+  - tar -xvzf dynamodb_local_latest.tar.gz -C ddb
+  - java -Djava.library.path=ddb/dynamodb_local/DynamoDBLocal_lib -jar ddb/DynamoDBLocal.jar -sharedDb -inMemory &
 
 before_script:
-  - curl -X PUT $RECHARGE_TEST_DB
   - firefox --version
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
