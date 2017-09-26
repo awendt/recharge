@@ -2,8 +2,9 @@ language: ruby
 
 env:
   - global:
-    - DYNAMODB_URL=http://localhost:8000
+    - AWS_REGION=irrelevant
     - DISPLAY=:99.0
+    - DYNAMODB_URL=http://localhost:8000
 
 sudo: false
 
