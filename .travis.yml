@@ -2,13 +2,16 @@ language: ruby
 
 env:
   - global:
-    - AWS_REGION=irrelevant
     - DYNAMODB_URL=http://localhost:8000
+    - DISPLAY=:99.0
 
 sudo: false
 
 addons:
   firefox: "latest"
+  apt:
+    packages:
+    - awscli
 
 before_install:
   - wget https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodriver-v0.18.0-linux64.tar.gz
@@ -19,11 +22,10 @@ before_install:
   - mkdir ddb
   - tar -xvzf dynamodb_local_latest.tar.gz -C ddb
   - java -Djava.library.path=ddb/dynamodb_local/DynamoDBLocal_lib -jar ddb/DynamoDBLocal.jar -sharedDb -inMemory &
+  - ./create_table.sh
 
 before_script:
   - firefox --version
-  - "export DISPLAY=:99.0"
-  - ruby create_table.rb
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 

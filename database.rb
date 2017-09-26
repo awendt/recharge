@@ -8,7 +8,7 @@ class Database
 
   def initialize
     client_opts = if ENV['DYNAMODB_URL']
-      { endpoint: ENV['DYNAMODB_URL'] }
+      { endpoint: ENV['DYNAMODB_URL'], region: 'irrelevant' }
     else
       {}
     end
