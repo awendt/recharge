@@ -10,4 +10,4 @@ aws dynamodb create-table \
   --attribute-definitions AttributeName=UserId,AttributeType=S AttributeName=Year,AttributeType=S \
   --key-schema AttributeName=UserId,KeyType=HASH AttributeName=Year,KeyType=RANGE \
   --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
-  --endpoint-url http://localhost:8000
+  --endpoint-url $DYNAMODB_URL
