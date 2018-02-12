@@ -2,7 +2,7 @@ language: ruby
 cache: bundler
 
 env:
-  - global:
+  global:
     - AWS_ACCESS_KEY_ID=foo
     - AWS_SECRET_ACCESS_KEY=bar
     - AWS_REGION=irrelevant
